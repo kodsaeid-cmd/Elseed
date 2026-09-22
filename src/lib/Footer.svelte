@@ -1,9 +1,9 @@
 <footer class="site-footer">
   <div class="footer-inner shell">
     <div class="footer-social" aria-label="شبکه‌های اجتماعی">
-      <a href="#instagram" aria-label="اینستاگرام">◎</a>
-      <a href="#telegram" aria-label="تلگرام">◒</a>
-      <a href="#youtube" aria-label="یوتیوب">▶</a>
+      <span title="اینستاگرام" aria-hidden="true">◎</span>
+      <span title="تلگرام" aria-hidden="true">◒</span>
+      <span title="یوتیوب" aria-hidden="true">▶</span>
     </div>
 
     <div class="footer-links">
