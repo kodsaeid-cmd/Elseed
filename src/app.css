@@ -615,7 +615,8 @@ main { overflow: clip; }
   direction: ltr;
   font-size: 19px;
 }
-.footer-social a {
+.footer-social a,
+.footer-social span {
   display: grid;
   place-items: center;
   width: 28px;
