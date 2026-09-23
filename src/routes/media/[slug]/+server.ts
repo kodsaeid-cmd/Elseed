@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 
 const images: Record<string, string> = {
   hero: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=88',
-  find: 'https://images.unsplash.com/photo-1643881578598-3480a9b7788b?auto=format&fit=crop&w=1200&q=88',
+  find: 'https://images.unsplash.com/photo-1770055592659-b35f56ea6b45?auto=format&fit=crop&fm=jpg&q=88&w=1600',
   fix: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=84',
   me: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1000&q=84',
   philosophy: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1400&q=86',
