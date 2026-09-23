@@ -8,7 +8,7 @@
       text: 'با چند سؤال ساده، قهوه‌ای مناسب سلیقه، زمان و روش دم‌آوریت پیدا کن.',
       cta: 'یافتن قهوه من',
       href: '/find',
-      image: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=900&q=86',
+      image: '/media/find',
       icon: 'search'
     },
     {
@@ -16,7 +16,7 @@
       text: 'ترشه، تلخه یا آبکیه؟ قبل از خرید بفهم مشکل از دانه است، آسیاب یا دم‌آوری.',
       cta: 'مشکل قهوه‌ام را حل کن',
       href: '/fix',
-      image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=86',
+      image: '/media/fix',
       icon: 'brew'
     },
     {
@@ -24,7 +24,7 @@
       text: 'قهوه باهات چیکار می‌کنه؟ کافئین، خواب، انرژی و حال بدنت را بهتر بشناس.',
       cta: 'شناخت قهوه و من',
       href: '/coffee-and-me',
-      image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=86',
+      image: '/media/me',
       icon: 'book'
     }
   ];
@@ -34,21 +34,21 @@
       title: 'چرا اسپرسو ترش می‌شود؟',
       text: 'سه علت رایج و چند تغییر ساده که همین امروز می‌توانی امتحان کنی.',
       meta: '۵ دقیقه مطالعه',
-      image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=900&q=84',
+      image: '/media/espresso',
       href: '/magazine/espresso-sour'
     },
     {
       title: 'کافئین چقدر در بدن می‌ماند؟',
       text: 'یک راهنمای ساده برای زمان مصرف، خواب و انتخاب سطح کافئین.',
       meta: '۷ دقیقه مطالعه',
-      image: 'https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=900&q=84',
+      image: '/media/caffeine',
       href: '/magazine/caffeine-and-sleep'
     },
     {
       title: 'راهنمای ساده V60 در خانه',
       text: 'یک دستور بی‌دردسر برای فنجانی تمیز، شیرین و قابل تکرار.',
       meta: '۶ دقیقه مطالعه',
-      image: 'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=900&q=84',
+      image: '/media/v60',
       href: '/magazine/v60-at-home'
     }
   ];
@@ -66,7 +66,7 @@
 <main>
   <section class="hero shell" aria-labelledby="hero-title">
     <div class="hero-visual" aria-hidden="true">
-      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=90" alt="" />
+      <img src="/media/hero" alt="" />
       <div class="hero-paper-note">GOOD<br />COFFEE<br />BETTER<br />DAYS</div>
       <div class="hero-hand-note">Same brews,<br />brighter you ♡</div>
     </div>
@@ -116,7 +116,7 @@
 
   <section class="philosophy shell" aria-labelledby="philosophy-title">
     <div class="philosophy-image">
-      <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1300&q=88" alt="فنجان قهوه در یک فضای آرام و روشن" />
+      <img src="/media/philosophy" alt="فنجان قهوه در یک فضای آرام و روشن" />
       <div class="stacked-english" aria-hidden="true">GOOD<br />COFFEE<br />BETTER<br />DAYS</div>
     </div>
     <div class="philosophy-copy">
