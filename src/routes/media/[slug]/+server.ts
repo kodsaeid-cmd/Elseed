@@ -8,7 +8,12 @@ const images: Record<string, string> = {
   philosophy: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1400&q=86',
   espresso: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1000&q=82',
   caffeine: 'https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=1000&q=82',
-  v60: 'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1000&q=82'
+  v60: 'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1000&q=82',
+  'flavor-chocolate': 'https://images.unsplash.com/photo-1728310335347-082140001938?auto=format&fit=crop&w=900&h=900&q=86',
+  'flavor-caramel': 'https://images.unsplash.com/photo-1575127749163-96a305397d19?auto=format&fit=crop&w=900&h=900&q=86',
+  'flavor-fruity': 'https://images.unsplash.com/photo-1645539824153-fb1eb030dcd8?auto=format&fit=crop&w=900&h=900&q=86',
+  'flavor-bold': 'https://images.unsplash.com/photo-1774841533608-28afd963a9c6?auto=format&fit=crop&w=900&h=900&q=86',
+  'flavor-unsure': 'https://images.unsplash.com/photo-1564676677001-92e8f1a0df30?auto=format&fit=crop&w=900&h=900&q=86'
 };
 
 export const GET: RequestHandler = async ({ params, fetch }) => {
