@@ -77,4 +77,14 @@ jobs:
             -H "Content-Type: application/json" \
             --data '{"name":"elseed.ir"}')
           echo "$response"
-          echo "$response" | grep -Eq '"success"[[:space:]]*:[[:space:]]*true|"code"[[:space:]]*:[[:space:]]*8000008|"already exists"' || exit 1
+          echo "$response" | grep -Eq '"success"[[:space:]]*:[[:space:]]*true|"code"[[:space:]]*:[[:space:]]*8000018|"already added this custom domain"' || exit 1
+
+      - name: Check elseed.ir domain status
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          curl -sS \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/elseed/domains" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Content-Type: application/json"
