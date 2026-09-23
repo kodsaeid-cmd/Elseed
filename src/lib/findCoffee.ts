@@ -180,7 +180,7 @@ export function findCoffeeMatch(answers: FindCoffeeAnswers): CoffeeMatch {
   const taste = tasteProfiles[answers.taste];
   const brewLabel = brewLabels[answers.brew];
 
-  let roast = taste.roast;
+  let roast: string = taste.roast;
   if ((answers.brew === 'espresso' || answers.brew === 'moka') && answers.taste === 'fruity') {
     roast = 'Medium';
   } else if ((answers.brew === 'v60' || answers.brew === 'filter') && answers.taste !== 'bold') {
