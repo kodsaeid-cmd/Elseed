@@ -1364,3 +1364,49 @@ main { overflow: clip; }
   .secondary-result,
   .primary-result { width: 100%; }
 }
+
+
+/* Time-of-day choices: make lifestyle photography the hero */
+.find-options-time .find-option {
+  min-height: 350px;
+  padding: 16px 16px 24px;
+}
+.find-options-time .find-option-photo {
+  width: 100%;
+  height: 190px;
+  margin-bottom: 24px;
+  border-radius: 18px;
+  box-shadow: 0 14px 34px rgba(62,39,32,.14);
+}
+.find-options-time .find-option-photo img {
+  object-position: center;
+}
+.find-options-time .find-option strong {
+  font-size: 20px;
+}
+.find-options-time .find-option small {
+  font-size: 14px;
+}
+@media (max-width: 980px) {
+  .find-options-time .find-option {
+    min-height: 320px;
+  }
+  .find-options-time .find-option-photo {
+    height: 180px;
+  }
+}
+@media (max-width: 620px) {
+  .find-options-time .find-option {
+    min-height: 250px;
+    padding: 14px 14px 48px;
+    justify-content: flex-start;
+  }
+  .find-options-time .find-option-photo {
+    position: static;
+    width: 100%;
+    height: 155px;
+    transform: none;
+    margin: 0 0 16px;
+    border-radius: 16px;
+  }
+}
