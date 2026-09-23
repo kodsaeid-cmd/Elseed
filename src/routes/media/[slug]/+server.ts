@@ -17,6 +17,7 @@ const images: Record<string, string> = {
   'time-morning': 'https://images.pexels.com/photos/16003598/pexels-photo-16003598.jpeg?cs=srgb&fm=jpg&w=1600',
   'time-day': 'https://images.pexels.com/photos/6238306/pexels-photo-6238306.jpeg?cs=srgb&fm=jpg&w=1600',
   'time-afternoon': 'https://images.unsplash.com/photo-1739423709394-db7a52c8ff40?auto=format&fit=crop&fm=jpg&q=88&w=1800',
+  'time-afternoon-v2': 'https://unsplash.com/photos/_jJlPYxZzoA/download?force=true&w=1800',
   'time-night': 'https://miro.medium.com/v2/resize%3Afit%3A1600/1%2AzROom6uk75DKb2ybNEzp4w.jpeg'
 };
 
