@@ -25,10 +25,10 @@
       title: 'معمولاً کی قهوه می‌خوری؟',
       subtitle: 'فقط چیزی که بیشتر شبیه زندگی واقعی توئه را انتخاب کن.',
       options: [
-        { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/media/time-morning' },
-        { value: 'day', title: 'صبح و وسط روز', description: 'همراه کار و تمرکز', icon: '◐', image: '/media/time-day' },
-        { value: 'afternoon', title: 'عصر', description: 'هنوز قهوه می‌خوام، ولی سبک‌تر', icon: '🌤', image: '/media/time-afternoon' },
-        { value: 'night', title: 'شب', description: 'بیشتر برای حال و مزه', icon: '☾', image: '/media/time-night' }
+        { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/images/time-morning.svg' },
+        { value: 'day', title: 'صبح و وسط روز', description: 'همراه کار و تمرکز', icon: '◐', image: '/images/time-day.svg' },
+        { value: 'afternoon', title: 'عصر', description: 'هنوز قهوه می‌خوام، ولی سبک‌تر', icon: '🌤', image: '/images/time-afternoon.svg' },
+        { value: 'night', title: 'شب', description: 'بیشتر برای حال و مزه', icon: '☾', image: '/images/time-night.svg' }
       ]
     },
     {
