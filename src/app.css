@@ -560,6 +560,9 @@ main { overflow: clip; }
   color: rgba(62,39,32,.62);
   font-size: 11.5px;
 }
+.newsletter-signup {
+  min-width: 0;
+}
 .newsletter-form {
   display: grid;
   grid-template-columns: 1fr 110px;
@@ -585,7 +588,21 @@ main { overflow: clip; }
   color: white;
   cursor: pointer;
   font-weight: 700;
+  transition: opacity .2s ease, transform .2s ease;
 }
+.newsletter-form button:hover:not(:disabled) { transform: translateY(-1px); }
+.newsletter-form button:disabled,
+.newsletter-form input:disabled {
+  opacity: .58;
+  cursor: wait;
+}
+.newsletter-feedback {
+  margin: 7px 14px 0;
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+.newsletter-feedback-success { color: #5f6f43; }
+.newsletter-feedback-error { color: #9b3f36; }
 .newsletter-note {
   direction: ltr;
   font-family: 'Comic Sans MS', cursive;
@@ -696,7 +713,8 @@ main { overflow: clip; }
   .philosophy { grid-template-columns: 48% 1fr; }
   .philosophy-mark { display: none; }
   .newsletter { grid-template-columns: 55px 1fr; }
-  .newsletter-form { grid-column: 1 / -1; }
+  .newsletter-signup { grid-column: 1 / -1; }
+  .newsletter-form { width: 100%; }
   .newsletter-note { display: none; }
   .footer-inner {
     grid-template-columns: 1fr 1fr;
