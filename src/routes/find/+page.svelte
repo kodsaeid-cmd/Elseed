@@ -9,6 +9,7 @@
     title: string;
     description: string;
     icon: string;
+    image?: string;
   };
 
   const questions: Array<{
@@ -60,11 +61,11 @@
       title: 'دوست داری مزه‌اش به کدوم سمت بره؟',
       subtitle: 'اگر نمی‌دونی، هیچ اشکالی نداره؛ برای همین اینجاییم.',
       options: [
-        { value: 'chocolate', title: 'شکلاتی و آجیلی', description: 'فندق، کاکائو، حس گرم و آشنا', icon: '◼' },
-        { value: 'caramel', title: 'کاراملی و شیرین', description: 'نرم، شیرین و راحت‌نوش', icon: '◆' },
-        { value: 'fruity', title: 'میوه‌ای و روشن', description: 'عطر بیشتر و اسیدیته زنده‌تر', icon: '✦' },
-        { value: 'bold', title: 'سنگین و کلاسیک', description: 'بادی بالا و طعم قهوه‌ی جدی', icon: '■' },
-        { value: 'unsure', title: 'واقعاً نمی‌دونم', description: 'یک انتخاب امن و متعادل بده', icon: '?' }
+        { value: 'chocolate', title: 'شکلاتی و آجیلی', description: 'فندق، کاکائو، حس گرم و آشنا', icon: '◼', image: '/media/flavor-chocolate' },
+        { value: 'caramel', title: 'کاراملی و شیرین', description: 'نرم، شیرین و راحت‌نوش', icon: '◆', image: '/media/flavor-caramel' },
+        { value: 'fruity', title: 'میوه‌ای و روشن', description: 'عطر بیشتر و اسیدیته زنده‌تر', icon: '✦', image: '/media/flavor-fruity' },
+        { value: 'bold', title: 'سنگین و کلاسیک', description: 'بادی بالا و طعم قهوه‌ی جدی', icon: '■', image: '/media/flavor-bold' },
+        { value: 'unsure', title: 'واقعاً نمی‌دونم', description: 'یک انتخاب امن و متعادل بده', icon: '?', image: '/media/flavor-unsure' }
       ]
     },
     {
@@ -214,7 +215,13 @@
             class="find-option"
             onclick={() => selectOption(questions[step].key, option.value)}
           >
-            <span class="find-option-icon" aria-hidden="true">{option.icon}</span>
+            {#if option.image}
+              <span class="find-option-photo" aria-hidden="true">
+                <img src={option.image} alt="" />
+              </span>
+            {:else}
+              <span class="find-option-icon" aria-hidden="true">{option.icon}</span>
+            {/if}
             <strong>{option.title}</strong>
             <small>{option.description}</small>
             <i aria-hidden="true">←</i>
