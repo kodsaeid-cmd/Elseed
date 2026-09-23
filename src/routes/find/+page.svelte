@@ -207,7 +207,11 @@
         <p>{questions[step].subtitle}</p>
       </div>
 
-      <div class:find-options-five={questions[step].options.length > 4} class="find-options">
+      <div
+        class:find-options-five={questions[step].options.length > 4}
+        class:find-options-time={questions[step].key === 'time'}
+        class="find-options"
+      >
         {#each questions[step].options as option}
           <button
             type="button"
