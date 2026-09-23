@@ -29,6 +29,45 @@
     }
   ];
 
+  let newsletterEmail = $state('');
+  let newsletterState = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
+  let newsletterMessage = $state('');
+
+  async function subscribeNewsletter(event: SubmitEvent) {
+    event.preventDefault();
+
+    if (newsletterState === 'loading') return;
+
+    newsletterState = 'loading';
+    newsletterMessage = '';
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: newsletterEmail,
+          source: 'homepage'
+        })
+      });
+
+      const result = (await response.json()) as { ok?: boolean; message?: string };
+
+      if (!response.ok || !result.ok) {
+        newsletterState = 'error';
+        newsletterMessage = result.message ?? 'ثبت عضویت انجام نشد. دوباره امتحان کن.';
+        return;
+      }
+
+      newsletterState = 'success';
+      newsletterMessage = result.message ?? 'عضویتت ثبت شد.';
+      newsletterEmail = '';
+    } catch {
+      newsletterState = 'error';
+      newsletterMessage = 'ارتباط برقرار نشد. دوباره امتحان کن.';
+    }
+  }
+
   const articles = [
     {
       title: 'چرا اسپرسو ترش می‌شود؟',
@@ -168,11 +207,36 @@
       <h2 id="newsletter-title">به جمع همراهان EL.SEED بپیوندید</h2>
       <p>راهنماهای تازه، مقاله‌های کاربردی و خبر محصولات جدید را مستقیم در ایمیل خود بگیرید.</p>
     </div>
-    <form class="newsletter-form">
-      <label class="sr-only" for="email">ایمیل شما</label>
-      <input id="email" type="email" autocomplete="email" placeholder="ایمیل شما" />
-      <button type="button">عضویت</button>
-    </form>
+    <div class="newsletter-signup">
+      <form class="newsletter-form" onsubmit={subscribeNewsletter}>
+        <label class="sr-only" for="newsletter-email">ایمیل شما</label>
+        <input
+          id="newsletter-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          inputmode="email"
+          placeholder="ایمیل شما"
+          bind:value={newsletterEmail}
+          disabled={newsletterState === 'loading'}
+          required
+        />
+        <button type="submit" disabled={newsletterState === 'loading'}>
+          {newsletterState === 'loading' ? 'در حال ثبت…' : 'عضویت'}
+        </button>
+      </form>
+
+      {#if newsletterMessage}
+        <p
+          class:newsletter-feedback-success={newsletterState === 'success'}
+          class:newsletter-feedback-error={newsletterState === 'error'}
+          class="newsletter-feedback"
+          aria-live="polite"
+        >
+          {newsletterMessage}
+        </p>
+      {/if}
+    </div>
     <div class="newsletter-note" aria-hidden="true">A Brighter<br />Inbox ♡</div>
   </section>
 </main>
