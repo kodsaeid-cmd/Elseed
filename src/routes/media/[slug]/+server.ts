@@ -14,10 +14,10 @@ const images: Record<string, string> = {
   'flavor-fruity': 'https://images.unsplash.com/photo-1645539824153-fb1eb030dcd8?auto=format&fit=crop&w=900&h=900&q=86',
   'flavor-bold': 'https://images.unsplash.com/photo-1774841533608-28afd963a9c6?auto=format&fit=crop&w=900&h=900&q=86',
   'flavor-unsure': 'https://images.unsplash.com/photo-1564676677001-92e8f1a0df30?auto=format&fit=crop&w=900&h=900&q=86',
-  'time-morning': 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=900&h=900&q=86',
-  'time-day': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&h=900&q=86',
-  'time-afternoon': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&h=900&q=86',
-  'time-night': 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=900&h=900&q=86'
+  'time-morning': 'https://images.pexels.com/photos/16003598/pexels-photo-16003598.jpeg?cs=srgb&fm=jpg&w=1600',
+  'time-day': 'https://images.pexels.com/photos/6238306/pexels-photo-6238306.jpeg?cs=srgb&fm=jpg&w=1600',
+  'time-afternoon': 'https://images.pexels.com/photos/5225313/pexels-photo-5225313.jpeg?cs=srgb&fm=jpg&w=1600',
+  'time-night': 'https://miro.medium.com/v2/resize%3Afit%3A1600/1%2AzROom6uk75DKb2ybNEzp4w.jpeg'
 };
 
 export const GET: RequestHandler = async ({ params, fetch }) => {
