@@ -77,4 +77,4 @@ jobs:
             -H "Content-Type: application/json" \
             --data '{"name":"elseed.ir"}')
           echo "$response"
-          echo "$response" | grep -Eq '"success":true|"code":8000008|"already exists"' || exit 1
+          echo "$response" | grep -Eq '"success"[[:space:]]*:[[:space:]]*true|"code"[[:space:]]*:[[:space:]]*8000008|"already exists"' || exit 1
