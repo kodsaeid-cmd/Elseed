@@ -1456,3 +1456,18 @@ main { overflow: clip; }
     border-radius: 16px;
   }
 }
+
+
+/* Effect reference framing: morning = left half, balanced = right half */
+.find-options-effect .find-option:nth-child(1) .find-option-photo img {
+  width: 200%;
+  max-width: none;
+  object-fit: cover;
+  object-position: left center;
+}
+.find-options-effect .find-option:nth-child(2) .find-option-photo img {
+  width: 200%;
+  max-width: none;
+  object-fit: cover;
+  object-position: right center;
+}
