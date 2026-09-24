@@ -26,7 +26,7 @@
       subtitle: 'فقط چیزی که بیشتر شبیه زندگی واقعی توئه را انتخاب کن.',
       options: [
         { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/media/time-morning' },
-        { value: 'day', title: 'صبح و وسط روز', description: 'همراه کار و تمرکز', icon: '◐', image: '/media/time-day' },
+        { value: 'day', title: 'صبح و وسط روز', description: 'همراه کار و تمرکز', icon: '◐', image: '/media/time-day-v2' },
         { value: 'afternoon', title: 'عصر', description: 'هنوز قهوه می‌خوام، ولی سبک‌تر', icon: '🌤', image: '/media/time-afternoon-v4' },
         { value: 'night', title: 'شب', description: 'بیشتر برای حال و مزه', icon: '☾', image: '/media/time-night' }
       ]
