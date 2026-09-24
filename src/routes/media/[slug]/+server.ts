@@ -4,6 +4,8 @@ import afternoon1 from '$lib/assets/time-afternoon/part1.b64?raw';
 import afternoon2 from '$lib/assets/time-afternoon/part2.b64?raw';
 import afternoon3 from '$lib/assets/time-afternoon/part3.b64?raw';
 import afternoon4 from '$lib/assets/time-afternoon/part4.b64?raw';
+import day0 from '$lib/assets/time-day/part0.b64?raw';
+import day1 from '$lib/assets/time-day/part1.b64?raw';
 
 const afternoonImageBase64 = [
   afternoon0,
@@ -12,6 +14,8 @@ const afternoonImageBase64 = [
   afternoon3,
   afternoon4
 ].join('');
+
+const dayImageBase64 = [day0, day1].join('');
 
 const images: Record<string, string> = {
   hero: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=88',
@@ -28,25 +32,32 @@ const images: Record<string, string> = {
   'flavor-bold': 'https://images.unsplash.com/photo-1774841533608-28afd963a9c6?auto=format&fit=crop&w=900&h=900&q=86',
   'flavor-unsure': 'https://images.unsplash.com/photo-1564676677001-92e8f1a0df30?auto=format&fit=crop&w=900&h=900&q=86',
   'time-morning': 'https://images.pexels.com/photos/16003598/pexels-photo-16003598.jpeg?cs=srgb&fm=jpg&w=1600',
-  'time-day': 'https://images.pexels.com/photos/6238306/pexels-photo-6238306.jpeg?cs=srgb&fm=jpg&w=1600',
   'time-afternoon': 'https://images.unsplash.com/photo-1739423709394-db7a52c8ff40?auto=format&fit=crop&fm=jpg&q=88&w=1800',
   'time-afternoon-v2': 'https://unsplash.com/photos/_jJlPYxZzoA/download?force=true&w=1800',
   'time-afternoon-v3': 'https://images.pexels.com/photos/4921513/pexels-photo-4921513.jpeg?cs=srgb&fm=jpg&w=1800',
   'time-night': 'https://miro.medium.com/v2/resize%3Afit%3A1600/1%2AzROom6uk75DKb2ybNEzp4w.jpeg'
 };
 
-export const GET: RequestHandler = async ({ params, fetch }) => {
-  if (params.slug === 'time-afternoon-v4') {
-    const binary = atob(afternoonImageBase64);
-    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+function imageResponse(base64: string) {
+  const binary = atob(base64);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
 
-    return new Response(bytes, {
-      status: 200,
-      headers: {
-        'Content-Type': 'image/webp',
-        'Cache-Control': 'public, max-age=31536000, immutable'
-      }
-    });
+  return new Response(bytes, {
+    status: 200,
+    headers: {
+      'Content-Type': 'image/webp',
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  });
+}
+
+export const GET: RequestHandler = async ({ params, fetch }) => {
+  if (params.slug === 'time-day') {
+    return imageResponse(dayImageBase64);
+  }
+
+  if (params.slug === 'time-afternoon-v4') {
+    return imageResponse(afternoonImageBase64);
   }
 
   const source = images[params.slug];
