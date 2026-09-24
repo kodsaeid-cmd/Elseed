@@ -52,7 +52,7 @@ function imageResponse(base64: string) {
 }
 
 export const GET: RequestHandler = async ({ params, fetch }) => {
-  if (params.slug === 'time-day') {
+  if (params.slug === 'time-day' || params.slug === 'time-day-v2') {
     return imageResponse(dayImageBase64);
   }
 
