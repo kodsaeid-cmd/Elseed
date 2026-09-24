@@ -37,10 +37,10 @@
       title: 'از قهوه چی می‌خوای؟',
       subtitle: 'نه اصطلاح تخصصی؛ فقط حسی که از فنجانت می‌خوای.',
       options: [
-        { value: 'strong', title: 'منو راه بندازه', description: 'انرژی و ضربه‌ی واضح', icon: '⚡' },
-        { value: 'balanced', title: 'انرژی متعادل', description: 'سرحال، بدون زیادی شلوغ شدن', icon: '↗' },
-        { value: 'many', title: 'چند فنجان در روز', description: 'می‌خوام جا برای فنجان بعدی هم باشه', icon: '∞' },
-        { value: 'taste', title: 'بیشتر برای مزه', description: 'خود تجربه قهوه برام مهم‌تره', icon: '♡' }
+        { value: 'strong', title: 'منو راه بندازه', description: 'انرژی و ضربه‌ی واضح', icon: '⚡', image: '/media/time-morning' },
+        { value: 'balanced', title: 'انرژی متعادل', description: 'سرحال، بدون زیادی شلوغ شدن', icon: '↗', image: '/media/time-day-v2' },
+        { value: 'many', title: 'چند فنجان در روز', description: 'می‌خوام جا برای فنجان بعدی هم باشه', icon: '∞', image: '/media/time-afternoon-v4' },
+        { value: 'taste', title: 'بیشتر برای مزه', description: 'خود تجربه قهوه برام مهم‌تره', icon: '♡', image: '/media/time-night' }
       ]
     },
     {
