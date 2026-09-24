@@ -1,4 +1,17 @@
 import type { RequestHandler } from './$types';
+import afternoon0 from '$lib/assets/time-afternoon/part0.b64?raw';
+import afternoon1 from '$lib/assets/time-afternoon/part1.b64?raw';
+import afternoon2 from '$lib/assets/time-afternoon/part2.b64?raw';
+import afternoon3 from '$lib/assets/time-afternoon/part3.b64?raw';
+import afternoon4 from '$lib/assets/time-afternoon/part4.b64?raw';
+
+const afternoonImageBase64 = [
+  afternoon0,
+  afternoon1,
+  afternoon2,
+  afternoon3,
+  afternoon4
+].join('');
 
 const images: Record<string, string> = {
   hero: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=88',
@@ -23,6 +36,19 @@ const images: Record<string, string> = {
 };
 
 export const GET: RequestHandler = async ({ params, fetch }) => {
+  if (params.slug === 'time-afternoon-v4') {
+    const binary = atob(afternoonImageBase64);
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+
+    return new Response(bytes, {
+      status: 200,
+      headers: {
+        'Content-Type': 'image/webp',
+        'Cache-Control': 'public, max-age=31536000, immutable'
+      }
+    });
+  }
+
   const source = images[params.slug];
   if (!source) {
     return new Response('Not found', { status: 404 });
