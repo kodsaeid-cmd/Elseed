@@ -210,6 +210,7 @@
       <div
         class:find-options-five={questions[step].options.length > 4}
         class:find-options-time={questions[step].key === 'time'}
+        class:find-options-effect={questions[step].key === 'effect'}
         class="find-options"
       >
         {#each questions[step].options as option}
