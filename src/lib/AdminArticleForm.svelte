@@ -444,7 +444,7 @@
                 <strong>برای افزودن چند تصویر یا ویدئو، اول پیش‌نویس را ذخیره کن.</strong>
                 <p>بعد از ذخیره، همین ساختار مقاله باز می‌ماند و می‌توانی رسانه‌های داخل متن را مدیریت کنی.</p>
               </div>
-              <button class="primary" type="submit" name="status" value="draft">ذخیره پیش‌نویس و ادامه</button>
+              <button class="primary" type="submit" formaction="?/draft">ذخیره پیش‌نویس و ادامه</button>
             </div>
           {/if}
         </section>
@@ -638,7 +638,7 @@
                 <strong>برای ساخت شبکه لینک داخلی، اول پیش‌نویس را ذخیره کن.</strong>
                 <p>بعد از ذخیره، مقصد، Anchor Text و یادداشت تحریریه را برای هر ارتباط مشخص می‌کنی.</p>
               </div>
-              <button class="primary" type="submit" name="status" value="draft">ذخیره پیش‌نویس و ادامه</button>
+              <button class="primary" type="submit" formaction="?/draft">ذخیره پیش‌نویس و ادامه</button>
             </div>
           {/if}
         </section>
@@ -691,8 +691,8 @@
     <footer class="editor-footer">
       <button type="button" onclick={cancelEditor}>انصراف</button>
       <div class="footer-spacer"></div>
-      <button class="draft-action" type="submit" name="status" value="draft">ذخیره پیش‌نویس</button>
-      <button class="primary publish-action" type="submit" name="status" value="published">
+      <button class="draft-action" type="submit" formaction="?/draft">ذخیره پیش‌نویس</button>
+      <button class="primary publish-action" type="submit" formaction="?/publish">
         {initial.status === 'published' ? 'ذخیره و بروزرسانی انتشار' : 'انتشار مطلب'}
       </button>
     </footer>
