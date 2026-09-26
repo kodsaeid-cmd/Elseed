@@ -220,3 +220,204 @@ export async function getAdminArticle(db: ElseedD1Database | undefined, id: stri
 export function articleFromRow(row: CmsArticleRow) {
   return rowToArticle(row);
 }
+
+
+export type CmsArticleInput = {
+  slug: string;
+  title: string;
+  eyebrow: string;
+  category: string;
+  excerpt: string;
+  readingTime: string;
+  coverImage: string;
+  coverAlt: string;
+  contentJson: string;
+  takeaway: string;
+  ctaJson: string;
+  status: 'draft' | 'published' | 'archived';
+  featured: boolean;
+  metaTitle: string;
+  metaDescription: string;
+  canonicalUrl: string;
+  robots: string;
+};
+
+function cleanText(value: FormDataEntryValue | null, max = 5000) {
+  return typeof value === 'string' ? value.trim().slice(0, max) : '';
+}
+
+export function parseArticleForm(form: FormData): CmsArticleInput {
+  const slug = cleanText(form.get('slug'), 160).toLowerCase();
+  const title = cleanText(form.get('title'), 240);
+  const statusValue = cleanText(form.get('status'), 20);
+  const status: CmsArticleInput['status'] =
+    statusValue === 'published' || statusValue === 'archived' ? statusValue : 'draft';
+
+  if (!title) throw new Error('عنوان مقاله لازم است.');
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    throw new Error('Slug باید فقط شامل حروف انگلیسی کوچک، عدد و خط تیره باشد.');
+  }
+
+  const rawContent = cleanText(form.get('content_json'), 100000) || '{"sections":[]}';
+  const rawCta = cleanText(form.get('cta_json'), 20000) || '{}';
+
+  try {
+    const parsed = JSON.parse(rawContent);
+    if (!parsed || !Array.isArray(parsed.sections)) throw new Error('invalid');
+  } catch {
+    throw new Error('ساختار محتوای مقاله معتبر نیست.');
+  }
+
+  try {
+    JSON.parse(rawCta);
+  } catch {
+    throw new Error('ساختار CTA معتبر نیست.');
+  }
+
+  return {
+    slug,
+    title,
+    eyebrow: cleanText(form.get('eyebrow'), 100),
+    category: cleanText(form.get('category'), 100),
+    excerpt: cleanText(form.get('excerpt'), 1000),
+    readingTime: cleanText(form.get('reading_time'), 60),
+    coverImage: cleanText(form.get('cover_image'), 1000),
+    coverAlt: cleanText(form.get('cover_alt'), 500),
+    contentJson: rawContent,
+    takeaway: cleanText(form.get('takeaway'), 2000),
+    ctaJson: rawCta,
+    status,
+    featured: form.get('featured') === 'on',
+    metaTitle: cleanText(form.get('meta_title'), 240),
+    metaDescription: cleanText(form.get('meta_description'), 500),
+    canonicalUrl: cleanText(form.get('canonical_url'), 1000),
+    robots: cleanText(form.get('robots'), 100) || 'index,follow'
+  };
+}
+
+export async function createAdminArticle(db: ElseedD1Database, input: CmsArticleInput) {
+  const id = crypto.randomUUID();
+  const publishedAt = input.status === 'published' ? new Date().toISOString() : null;
+
+  const result = await db
+    .prepare(
+      `INSERT INTO cms_articles
+      (id, slug, title, eyebrow, category, excerpt, reading_time, cover_image, cover_alt,
+       content_json, takeaway, cta_json, status, featured, meta_title, meta_description,
+       canonical_url, robots, published_at, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
+    )
+    .bind(
+      id,
+      input.slug,
+      input.title,
+      input.eyebrow,
+      input.category,
+      input.excerpt,
+      input.readingTime,
+      input.coverImage,
+      input.coverAlt,
+      input.contentJson,
+      input.takeaway,
+      input.ctaJson,
+      input.status,
+      input.featured ? 1 : 0,
+      input.metaTitle,
+      input.metaDescription,
+      input.canonicalUrl || '/magazine/' + input.slug,
+      input.robots,
+      publishedAt
+    )
+    .run();
+
+  if (result.success === false) throw new Error(result.error || 'ساخت مقاله انجام نشد.');
+
+  await db
+    .prepare(
+      `INSERT INTO cms_audit_log (action, entity_type, entity_id, payload_json)
+       VALUES ('create', 'article', ?, ?)`
+    )
+    .bind(id, JSON.stringify({ slug: input.slug, status: input.status }))
+    .run();
+
+  return id;
+}
+
+export async function updateAdminArticle(
+  db: ElseedD1Database,
+  id: string,
+  input: CmsArticleInput
+) {
+  const current = await getAdminArticle(db, id);
+  if (!current) throw new Error('مقاله پیدا نشد.');
+
+  await db
+    .prepare(
+      `INSERT INTO cms_article_revisions (article_id, snapshot_json)
+       VALUES (?, ?)`
+    )
+    .bind(id, JSON.stringify(current))
+    .run();
+
+  const publishedAt =
+    input.status === 'published'
+      ? current.published_at || new Date().toISOString()
+      : current.published_at;
+
+  const result = await db
+    .prepare(
+      `UPDATE cms_articles SET
+        slug = ?, title = ?, eyebrow = ?, category = ?, excerpt = ?, reading_time = ?,
+        cover_image = ?, cover_alt = ?, content_json = ?, takeaway = ?, cta_json = ?,
+        status = ?, featured = ?, meta_title = ?, meta_description = ?, canonical_url = ?,
+        robots = ?, published_at = ?, updated_at = datetime('now')
+       WHERE id = ?`
+    )
+    .bind(
+      input.slug,
+      input.title,
+      input.eyebrow,
+      input.category,
+      input.excerpt,
+      input.readingTime,
+      input.coverImage,
+      input.coverAlt,
+      input.contentJson,
+      input.takeaway,
+      input.ctaJson,
+      input.status,
+      input.featured ? 1 : 0,
+      input.metaTitle,
+      input.metaDescription,
+      input.canonicalUrl || '/magazine/' + input.slug,
+      input.robots,
+      publishedAt,
+      id
+    )
+    .run();
+
+  if (result.success === false) throw new Error(result.error || 'ویرایش مقاله انجام نشد.');
+
+  await db
+    .prepare(
+      `INSERT INTO cms_audit_log (action, entity_type, entity_id, payload_json)
+       VALUES ('update', 'article', ?, ?)`
+    )
+    .bind(id, JSON.stringify({ slug: input.slug, status: input.status }))
+    .run();
+}
+
+export async function deleteAdminArticle(db: ElseedD1Database, id: string) {
+  const current = await getAdminArticle(db, id);
+  if (!current) return;
+
+  await db
+    .prepare(
+      `INSERT INTO cms_audit_log (action, entity_type, entity_id, payload_json)
+       VALUES ('delete', 'article', ?, ?)`
+    )
+    .bind(id, JSON.stringify({ slug: current.slug, title: current.title }))
+    .run();
+
+  await db.prepare('DELETE FROM cms_articles WHERE id = ?').bind(id).run();
+}
