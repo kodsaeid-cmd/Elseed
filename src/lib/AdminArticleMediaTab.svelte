@@ -1,6 +1,6 @@
 <script lang="ts">
   type Row = Record<string, any>;
-  type SourceMode = 'upload' | 'library';
+  type SourceMode = 'upload' | 'library' | 'url';
 
   export let articleId = '';
   export let articleBody = '';
@@ -15,6 +15,9 @@
   let placementAlt = '';
   let placementCaption = '';
   let sourceMode: SourceMode = 'upload';
+  let externalUrl = '';
+  let externalName = '';
+  let externalType: 'image' | 'video' = 'image';
   let loading = false;
   let uploading = false;
   let saving = false;
@@ -147,6 +150,49 @@
       await load();
     } finally {
       uploading = false;
+    }
+  }
+
+
+  async function addExternalAndAttach() {
+    if (!externalUrl.trim() || saving) return;
+    saving = true;
+    error = '';
+    notice = '';
+
+    try {
+      const created = await request('/api/admin-media', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          action: 'add_external_asset',
+          url: externalUrl,
+          name: externalName,
+          mediaType: externalType,
+          alt: placementAlt
+        })
+      });
+
+      if (!created.asset?.id) throw new Error('رسانه خارجی ثبت نشد.');
+
+      await attachAsset(
+        created.asset.id,
+        afterParagraph,
+        nextSortOrder(),
+        placementAlt,
+        placementCaption
+      );
+
+      externalUrl = '';
+      externalName = '';
+      placementAlt = '';
+      placementCaption = '';
+      await load();
+      notice = 'رسانه URLدار به کتابخانه و مقاله اضافه شد.';
+    } catch (caught) {
+      error = caught instanceof Error ? caught.message : 'رسانه URLدار اضافه نشد.';
+    } finally {
+      saving = false;
     }
   }
 
@@ -309,6 +355,11 @@
             type="button"
             on:click={() => (sourceMode = 'library')}
           >▦ کتابخانه</button>
+          <button
+            class:active={sourceMode === 'url'}
+            type="button"
+            on:click={() => (sourceMode = 'url')}
+          >↗ URL</button>
         </div>
       </div>
 
@@ -342,7 +393,7 @@
                 {/each}
               </div>
             {/if}
-          {:else}
+          {:else if sourceMode === 'library'}
             <div class="library-picker">
               <label>
                 انتخاب از کتابخانه
@@ -367,6 +418,30 @@
                 </div>
               {:else}
                 <div class="library-empty">رسانه انتخاب‌شده اینجا پیش‌نمایش داده می‌شود.</div>
+              {/if}
+            </div>
+          {:else}
+            <div class="external-picker">
+              <div class="external-type-switch">
+                <button class:active={externalType === 'image'} type="button" on:click={() => (externalType = 'image')}>▧ تصویر</button>
+                <button class:active={externalType === 'video'} type="button" on:click={() => (externalType = 'video')}>▶ ویدئو</button>
+              </div>
+              <label>
+                URL امن رسانه
+                <input bind:value={externalUrl} dir="ltr" placeholder="https://..." />
+              </label>
+              <label>
+                نام رسانه
+                <input bind:value={externalName} placeholder="اختیاری" />
+              </label>
+              {#if externalUrl}
+                <div class="library-preview">
+                  {#if externalType === 'image'}
+                    <img src={externalUrl} alt={placementAlt || externalName || ''} />
+                  {:else}
+                    <video src={externalUrl} controls preload="metadata"></video>
+                  {/if}
+                </div>
               {/if}
             </div>
           {/if}
@@ -405,13 +480,20 @@
               disabled={!files.length || uploading || !directUploadEnabled}
               on:click={uploadMany}
             >{uploading ? 'در حال آپلود…' : 'آپلود و افزودن به مقاله'}</button>
-          {:else}
+          {:else if sourceMode === 'library'}
             <button
               class="attach-primary"
               type="button"
               disabled={!selectedMediaId || saving}
               on:click={attachFromLibrary}
             >{saving ? 'در حال افزودن…' : 'افزودن از کتابخانه'}</button>
+          {:else}
+            <button
+              class="attach-primary"
+              type="button"
+              disabled={!externalUrl.trim() || saving}
+              on:click={addExternalAndAttach}
+            >{saving ? 'در حال افزودن…' : 'ثبت URL و افزودن به مقاله'}</button>
           {/if}
         </aside>
       </div>
@@ -548,8 +630,8 @@
   .add-grid{display:grid;grid-template-columns:minmax(0,1.55fr) 310px}.source-surface{padding:14px;border-left:1px solid rgba(39,99,91,.07)}
   .dropzone{min-height:122px;border:1.5px dashed rgba(37,111,100,.22);border-radius:14px;background:#f9fcfb;display:grid;place-items:center;text-align:center;padding:14px;cursor:pointer;transition:.18s ease}.dropzone:hover{border-color:rgba(29,112,100,.42);background:#f4faf7}.dropzone.disabled{opacity:.55;cursor:not-allowed}.dropzone input{display:none}.drop-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#e6f3ef;color:#2d7168;font-size:1rem}.dropzone strong{font-size:.69rem;margin-top:6px}.dropzone small{font-size:.53rem;color:#91a09d;margin-top:2px}
   .file-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.file-chips span{max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:5px 7px;border-radius:8px;background:#eef6f3;color:#52766f;font-size:.52rem}
-  .library-picker>label,.attach-panel label,.media-settings label{display:grid;gap:4px;color:#607873;font-size:.59rem}.library-picker select,.attach-panel input,.attach-panel select,.attach-panel textarea,.media-settings input,.media-settings select,.media-settings textarea{width:100%;box-sizing:border-box;border:1px solid rgba(43,102,94,.12);background:#fff;border-radius:10px;padding:8px 9px;color:#2d5751;font:inherit;outline:none}
-  .library-preview{margin-top:9px;height:150px;border-radius:12px;background:#eef3f1;overflow:hidden;position:relative}.library-preview img,.library-preview video{width:100%;height:100%;object-fit:contain;display:block}.library-preview span{position:absolute;right:7px;bottom:7px;max-width:80%;padding:4px 7px;border-radius:7px;background:rgba(255,255,255,.92);color:#526f69;font-size:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-empty{min-height:110px;margin-top:9px;border:1px dashed rgba(42,101,92,.12);border-radius:12px;display:grid;place-items:center;text-align:center;color:#95a19f;font-size:.55rem}
+  .library-picker>label,.external-picker>label,.attach-panel label,.media-settings label{display:grid;gap:4px;color:#607873;font-size:.59rem}.library-picker select,.external-picker input,.attach-panel input,.attach-panel select,.attach-panel textarea,.media-settings input,.media-settings select,.media-settings textarea{width:100%;box-sizing:border-box;border:1px solid rgba(43,102,94,.12);background:#fff;border-radius:10px;padding:8px 9px;color:#2d5751;font:inherit;outline:none}
+  .external-picker{display:grid;gap:9px}.external-type-switch{display:flex;gap:5px}.external-type-switch button{flex:1;border:1px solid rgba(43,102,94,.11);background:#f5f9f7;color:#607873;border-radius:9px;padding:7px;font:inherit;font-size:.56rem;cursor:pointer}.external-type-switch button.active{background:#e4f2ee;color:#256e64;font-weight:900}.library-preview{margin-top:9px;height:150px;border-radius:12px;background:#eef3f1;overflow:hidden;position:relative}.library-preview img,.library-preview video{width:100%;height:100%;object-fit:contain;display:block}.library-preview span{position:absolute;right:7px;bottom:7px;max-width:80%;padding:4px 7px;border-radius:7px;background:rgba(255,255,255,.92);color:#526f69;font-size:.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-empty{min-height:110px;margin-top:9px;border:1px dashed rgba(42,101,92,.12);border-radius:12px;display:grid;place-items:center;text-align:center;color:#95a19f;font-size:.55rem}
   .attach-panel{padding:14px;background:#fafcfb;display:flex;flex-direction:column;gap:10px}.optional-details{border:1px solid rgba(42,101,92,.09);border-radius:11px;background:#fff;overflow:hidden}.optional-details summary{list-style:none;cursor:pointer;padding:9px 10px;display:flex;justify-content:space-between;gap:10px;color:#56746e;font-size:.58rem}.optional-details summary::-webkit-details-marker{display:none}.optional-details summary small{color:#97a29f}.optional-details[open] summary{border-bottom:1px solid rgba(42,101,92,.07)}.optional-details label{margin:9px 10px}.optional-details textarea{min-height:58px;resize:vertical}
   .attach-primary{margin-top:auto;border:0;border-radius:11px;background:#176d67;color:#fff;padding:10px 12px;font:inherit;font-size:.62rem;font-weight:900;cursor:pointer;box-shadow:0 7px 18px rgba(23,109,103,.14)}.attach-primary:disabled{opacity:.45;cursor:not-allowed}
   .placement-workspace{margin-top:14px;border:1px solid rgba(38,102,93,.09);border-radius:19px;background:#f8fbfa;padding:14px}.placement-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.placement-heading strong,.placement-heading span{display:block}.placement-heading strong{font-size:.74rem}.placement-heading span{font-size:.54rem;color:#8a9996;margin-top:2px}.placement-heading>b{padding:5px 8px;border-radius:8px;background:#e6f3ef;color:#347168;font-size:.52rem}
