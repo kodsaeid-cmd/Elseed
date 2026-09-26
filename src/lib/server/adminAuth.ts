@@ -1,10 +1,6 @@
-const COOKIE_NAME = 'elseed_admin';
+import type { Cookies } from '@sveltejs/kit';
 
-type CookieJar = {
-  get(name: string): string | undefined;
-  set(name: string, value: string, options: Record<string, unknown>): void;
-  delete(name: string, options: Record<string, unknown>): void;
-};
+const COOKIE_NAME = 'elseed_admin';
 
 function getAdminPassword(platform?: App.Platform) {
   const value = platform?.env?.ADMIN_PASSWORD;
@@ -29,14 +25,14 @@ export async function isAdminConfigured(platform?: App.Platform) {
   return Boolean(getAdminPassword(platform));
 }
 
-export async function isAdminAuthenticated(cookies: CookieJar, platform?: App.Platform) {
+export async function isAdminAuthenticated(cookies: Cookies, platform?: App.Platform) {
   const expected = await expectedToken(platform);
   if (!expected) return false;
   const actual = cookies.get(COOKIE_NAME) ?? '';
   return actual === expected;
 }
 
-export async function authenticateAdmin(password: string, cookies: CookieJar, platform?: App.Platform) {
+export async function authenticateAdmin(password: string, cookies: Cookies, platform?: App.Platform) {
   const configuredPassword = getAdminPassword(platform);
   if (!configuredPassword || password !== configuredPassword) return false;
 
@@ -51,7 +47,7 @@ export async function authenticateAdmin(password: string, cookies: CookieJar, pl
   return true;
 }
 
-export function logoutAdmin(cookies: CookieJar) {
+export function logoutAdmin(cookies: Cookies) {
   cookies.delete(COOKIE_NAME, {
     path: '/admin',
     httpOnly: true,
