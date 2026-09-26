@@ -20,14 +20,16 @@ export const actions: Actions = {
     const db = platform?.env?.DB;
     if (!db) return fail(503, { error: 'D1 در دسترس نیست.' });
 
+    let id: string;
+
     try {
       const input = parseArticleForm(await request.formData());
-      const id = await createAdminArticle(db, input);
-      throw redirect(303, '/admin/magazine/' + id);
+      id = await createAdminArticle(db, input);
     } catch (error) {
-      if (error instanceof Response) throw error;
       const message = error instanceof Error ? error.message : 'ذخیره مقاله انجام نشد.';
       return fail(400, { error: message });
     }
+
+    throw redirect(303, '/admin/magazine/' + id);
   }
 };
