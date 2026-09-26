@@ -600,7 +600,7 @@
                               <option value="">انتخاب مقصد…</option>
                               <option value="/find">Find My Coffee</option>
                               <option value="/fix">Fix My Coffee</option>
-                              {#each articleOptions.filter((option) => option.slug !== articleSlug) as option}
+                              {#each articleOptions.filter((option: { id: string; slug: string; title: string }) => option.slug !== articleSlug) as option}
                                 <option value={'/magazine/' + option.slug}>{option.title}</option>
                               {/each}
                             </select>
