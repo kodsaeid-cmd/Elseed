@@ -67,6 +67,7 @@ function rowToArticle(row: CmsArticleRow): MagazineArticle {
   const publishedIso = row.published_at?.slice(0, 10) || row.created_at.slice(0, 10);
 
   return {
+    id: row.id,
     slug: row.slug,
     title: row.title,
     eyebrow: row.eyebrow,
