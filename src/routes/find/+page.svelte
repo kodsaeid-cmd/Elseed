@@ -212,6 +212,7 @@
         class:find-options-time={questions[step].key === 'time'}
         class:find-options-effect={questions[step].key === 'effect'}
         class:find-options-sensitivity={questions[step].key === 'sensitivity'}
+        class:find-options-taste={questions[step].key === 'taste'}
         class:find-options-brew={questions[step].key === 'brew'}
         class="find-options"
       >
