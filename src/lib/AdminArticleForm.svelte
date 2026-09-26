@@ -1,10 +1,12 @@
 <script lang="ts">
   let {
     initial,
-    submitLabel = 'ذخیره مقاله'
+    submitLabel = 'ذخیره مقاله',
+    articleOptions = []
   } = $props<{
     initial: Record<string, any>;
     submitLabel?: string;
+    articleOptions?: { id: string; slug: string; title: string }[];
   }>();
 
   function parseJson(value: string | undefined, fallback: any) {
@@ -17,11 +19,15 @@
 
   const initialContent = parseJson(initial.content_json, {
     quickAnswer: initial.quickAnswer ?? '',
-    sections: initial.sections ?? []
+    sections: initial.sections ?? [],
+    faq: initial.faq ?? [],
+    relatedSlugs: initial.relatedSlugs ?? [],
+    internalLinks: initial.internalLinks ?? []
   });
   const initialCta = parseJson(initial.cta_json, initial.cta ?? {});
 
   let quickAnswer = $state(initialContent.quickAnswer ?? '');
+
   let sections = $state(
     (initialContent.sections?.length ? initialContent.sections : [{ heading: '', paragraphs: [''], bullets: [] }]).map(
       (section: any) => ({
@@ -30,6 +36,24 @@
         bulletsText: Array.isArray(section.bullets) ? section.bullets.join('\n') : ''
       })
     )
+  );
+
+  let faq = $state(
+    (initialContent.faq?.length ? initialContent.faq : []).map((item: any) => ({
+      question: item.question ?? '',
+      answer: item.answer ?? ''
+    }))
+  );
+
+  let relatedSlugs = $state<string[]>(
+    Array.isArray(initialContent.relatedSlugs) ? initialContent.relatedSlugs : []
+  );
+
+  let internalLinks = $state(
+    (initialContent.internalLinks?.length ? initialContent.internalLinks : []).map((item: any) => ({
+      label: item.label ?? '',
+      href: item.href ?? ''
+    }))
   );
 
   let ctaLabel = $state(initialCta.label ?? '');
@@ -49,7 +73,20 @@
           .split('\n')
           .map((item: string) => item.trim())
           .filter(Boolean)
-      }))
+      })),
+      faq: faq
+        .map((item: any) => ({
+          question: item.question.trim(),
+          answer: item.answer.trim()
+        }))
+        .filter((item: any) => item.question && item.answer),
+      relatedSlugs,
+      internalLinks: internalLinks
+        .map((item: any) => ({
+          label: item.label.trim(),
+          href: item.href.trim()
+        }))
+        .filter((item: any) => item.label && item.href)
     })
   );
 
@@ -68,6 +105,22 @@
   function removeSection(index: number) {
     if (sections.length === 1) return;
     sections.splice(index, 1);
+  }
+
+  function addFaq() {
+    faq.push({ question: '', answer: '' });
+  }
+
+  function removeFaq(index: number) {
+    faq.splice(index, 1);
+  }
+
+  function addInternalLink() {
+    internalLinks.push({ label: '', href: '' });
+  }
+
+  function removeInternalLink(index: number) {
+    internalLinks.splice(index, 1);
   }
 </script>
 
@@ -161,6 +214,70 @@
         <span>اگر فقط یک چیز یادت بماند</span>
         <textarea name="takeaway" rows="3">{initial.takeaway ?? ''}</textarea>
       </label>
+    </section>
+
+    <section class="admin-form-card">
+      <div class="admin-form-card-head">
+        <div>
+          <span>FAQ</span>
+          <h2>سؤال‌های متداول</h2>
+        </div>
+        <button type="button" class="admin-ghost-button" onclick={addFaq}>+ سؤال</button>
+      </div>
+
+      <div class="admin-section-editor">
+        {#each faq as item, index}
+          <article>
+            <div class="admin-section-editor-head">
+              <strong>FAQ {index + 1}</strong>
+              <button type="button" onclick={() => removeFaq(index)}>حذف</button>
+            </div>
+            <label class="admin-field admin-field-wide">
+              <span>سؤال</span>
+              <input bind:value={item.question} />
+            </label>
+            <label class="admin-field admin-field-wide">
+              <span>جواب</span>
+              <textarea bind:value={item.answer} rows="4"></textarea>
+            </label>
+          </article>
+        {:else}
+          <div class="admin-editor-empty">FAQ اختیاری است؛ در صورت نیاز اضافه کن.</div>
+        {/each}
+      </div>
+    </section>
+
+    <section class="admin-form-card">
+      <div class="admin-form-card-head">
+        <div>
+          <span>INTERNAL LINKS</span>
+          <h2>لینک‌سازی داخلی</h2>
+        </div>
+        <button type="button" class="admin-ghost-button" onclick={addInternalLink}>+ لینک</button>
+      </div>
+
+      <div class="admin-section-editor">
+        {#each internalLinks as item, index}
+          <article>
+            <div class="admin-section-editor-head">
+              <strong>لینک {index + 1}</strong>
+              <button type="button" onclick={() => removeInternalLink(index)}>حذف</button>
+            </div>
+            <div class="admin-fields">
+              <label class="admin-field">
+                <span>Anchor Text</span>
+                <input bind:value={item.label} />
+              </label>
+              <label class="admin-field">
+                <span>URL</span>
+                <input bind:value={item.href} dir="ltr" placeholder="/find" />
+              </label>
+            </div>
+          </article>
+        {:else}
+          <div class="admin-editor-empty">هنوز لینک داخلی دستی ثبت نشده است.</div>
+        {/each}
+      </div>
     </section>
 
     <section class="admin-form-card">
@@ -272,6 +389,26 @@
           <img src={initial.cover_image ?? initial.image} alt="" />
         </div>
       {/if}
+    </section>
+
+    <section class="admin-form-card">
+      <div class="admin-form-card-head">
+        <div>
+          <span>RELATED</span>
+          <h2>مقالات مرتبط</h2>
+        </div>
+      </div>
+
+      <div class="admin-related-picker">
+        {#each articleOptions.filter((option) => option.slug !== initial.slug) as option}
+          <label>
+            <input type="checkbox" value={option.slug} bind:group={relatedSlugs} />
+            <span>{option.title}</span>
+          </label>
+        {:else}
+          <p>مقاله دیگری برای ارتباط وجود ندارد.</p>
+        {/each}
+      </div>
     </section>
   </aside>
 </form>
