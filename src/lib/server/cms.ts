@@ -40,7 +40,13 @@ function displayDate(value: string | null) {
 }
 
 function rowToArticle(row: CmsArticleRow): MagazineArticle {
-  let content: { quickAnswer?: string; sections?: MagazineArticle['sections'] } = {};
+  let content: {
+    quickAnswer?: string;
+    sections?: MagazineArticle['sections'];
+    faq?: MagazineArticle['faq'];
+    relatedSlugs?: string[];
+    internalLinks?: MagazineArticle['internalLinks'];
+  } = {};
   let cta: MagazineArticle['cta'] | undefined;
 
   try {
@@ -76,6 +82,9 @@ function rowToArticle(row: CmsArticleRow): MagazineArticle {
     quickAnswer: content.quickAnswer,
     sections: Array.isArray(content.sections) ? content.sections : [],
     takeaway: row.takeaway,
+    faq: Array.isArray(content.faq) ? content.faq : [],
+    relatedSlugs: Array.isArray(content.relatedSlugs) ? content.relatedSlugs : [],
+    internalLinks: Array.isArray(content.internalLinks) ? content.internalLinks : [],
     cta,
     seo: {
       metaTitle: row.meta_title,
@@ -100,7 +109,10 @@ function fallbackArticleToRow(article: MagazineArticle, index: number): CmsArtic
     cover_alt: article.imageAlt,
     content_json: JSON.stringify({
       quickAnswer: article.quickAnswer ?? '',
-      sections: article.sections
+      sections: article.sections,
+      faq: article.faq ?? [],
+      relatedSlugs: article.relatedSlugs ?? [],
+      internalLinks: article.internalLinks ?? []
     }),
     takeaway: article.takeaway,
     cta_json: JSON.stringify(article.cta ?? {}),
