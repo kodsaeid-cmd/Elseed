@@ -46,6 +46,7 @@ function rowToArticle(row: CmsArticleRow): MagazineArticle {
     faq?: MagazineArticle['faq'];
     relatedSlugs?: string[];
     internalLinks?: MagazineArticle['internalLinks'];
+    profileQuestion?: MagazineArticle['profileQuestion'];
   } = {};
   let cta: MagazineArticle['cta'] | undefined;
 
@@ -86,6 +87,10 @@ function rowToArticle(row: CmsArticleRow): MagazineArticle {
     faq: Array.isArray(content.faq) ? content.faq : [],
     relatedSlugs: Array.isArray(content.relatedSlugs) ? content.relatedSlugs : [],
     internalLinks: Array.isArray(content.internalLinks) ? content.internalLinks : [],
+    profileQuestion:
+      content.profileQuestion && typeof content.profileQuestion === 'object'
+        ? content.profileQuestion
+        : undefined,
     cta,
     seo: {
       metaTitle: row.meta_title,
@@ -113,7 +118,8 @@ function fallbackArticleToRow(article: MagazineArticle, index: number): CmsArtic
       sections: article.sections,
       faq: article.faq ?? [],
       relatedSlugs: article.relatedSlugs ?? [],
-      internalLinks: article.internalLinks ?? []
+      internalLinks: article.internalLinks ?? [],
+      profileQuestion: article.profileQuestion ?? null
     }),
     takeaway: article.takeaway,
     cta_json: JSON.stringify(article.cta ?? {}),
