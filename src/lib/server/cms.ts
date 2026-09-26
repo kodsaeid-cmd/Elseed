@@ -519,3 +519,51 @@ export async function deleteAdminArticle(db: ElseedD1Database, id: string) {
 
   await db.prepare('DELETE FROM cms_articles WHERE id = ?').bind(id).run();
 }
+
+
+export async function setAdminArticleStatus(
+  db: ElseedD1Database,
+  id: string,
+  status: 'draft' | 'published' | 'archived'
+) {
+  const publishedAtSql =
+    status === 'published'
+      ? "COALESCE(published_at, datetime('now'))"
+      : 'published_at';
+
+  const result = await db
+    .prepare(
+      `UPDATE cms_articles
+       SET status = ?, published_at = ${publishedAtSql}, updated_at = datetime('now')
+       WHERE id = ?`
+    )
+    .bind(status, id)
+    .run();
+
+  if (result.success === false) {
+    throw new Error(result.error || 'تغییر وضعیت مقاله انجام نشد.');
+  }
+
+  const verified = await db
+    .prepare('SELECT id, status, published_at FROM cms_articles WHERE id = ? LIMIT 1')
+    .bind(id)
+    .first<{ id: string; status: string; published_at: string | null }>();
+
+  if (!verified || verified.status !== status) {
+    throw new Error('وضعیت مقاله بعد از ذخیره تأیید نشد.');
+  }
+
+  try {
+    await db
+      .prepare(
+        `INSERT INTO cms_audit_log (action, entity_type, entity_id, payload_json)
+         VALUES ('status_change', 'article', ?, ?)`
+      )
+      .bind(id, JSON.stringify({ status }))
+      .run();
+  } catch {
+    // Audit logging must not block publishing.
+  }
+
+  return verified;
+}
