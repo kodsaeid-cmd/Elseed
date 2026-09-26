@@ -9,7 +9,7 @@ import {
   updateAdminArticle
 } from '$lib/server/cms';
 
-export const load: PageServerLoad = async ({ params, cookies, platform }) => {
+export const load: PageServerLoad = async ({ params, cookies, platform, url }) => {
   if (!(await isAdminAuthenticated(cookies, platform))) {
     throw redirect(303, '/admin/login');
   }
@@ -23,6 +23,7 @@ export const load: PageServerLoad = async ({ params, cookies, platform }) => {
   const articles = await getAdminArticles(db);
   return {
     article,
+    saved: url.searchParams.get('saved') ?? '',
     articleOptions: articles.map((item) => ({ id: item.id, slug: item.slug, title: item.title }))
   };
 };
@@ -36,14 +37,19 @@ export const actions: Actions = {
     const db = platform?.env?.DB;
     if (!db) return fail(503, { error: 'D1 در دسترس نیست.' });
 
+    let savedStatus: 'draft' | 'published' | 'archived' = 'draft';
+
     try {
-      const input = parseArticleForm(await request.formData());
+      const form = await request.formData();
+      const input = parseArticleForm(form);
+      savedStatus = input.status;
       await updateAdminArticle(db, params.id, input);
-      return { success: true, message: 'تغییرات ذخیره شد.' };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'ذخیره تغییرات انجام نشد.';
+    } catch (caught) {
+      const message = caught instanceof Error ? caught.message : 'ذخیره تغییرات انجام نشد.';
       return fail(400, { error: message });
     }
+
+    throw redirect(303, `/admin/magazine/${params.id}?saved=${savedStatus}`);
   },
 
   delete: async ({ params, cookies, platform }) => {
