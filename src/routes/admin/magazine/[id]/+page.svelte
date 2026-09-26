@@ -9,6 +9,12 @@
 </svelte:head>
 
 <div class="dandooni-editor-page">
+  {#if data.saved}
+    <div class="admin-alert admin-alert-success editor-page-message">
+      {data.saved === 'published' ? 'مقاله با موفقیت منتشر شد.' : data.saved === 'archived' ? 'مقاله آرشیو شد.' : 'پیش‌نویس با موفقیت ذخیره شد.'}
+    </div>
+  {/if}
+
   {#if form?.success}
     <div class="admin-alert admin-alert-success editor-page-message">{form.message}</div>
   {/if}
