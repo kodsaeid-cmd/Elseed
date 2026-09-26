@@ -261,6 +261,56 @@ export async function ensureCmsSeed(db?: ElseedD1Database) {
   }
 }
 
+async function hydrateArticleImages(
+  db: ElseedD1Database,
+  articles: MagazineArticle[]
+) {
+  const missing = articles.filter((article) => !article.image?.trim() && article.id);
+  if (!missing.length) return articles;
+
+  try {
+    const result = await db
+      .prepare(
+        `SELECT
+          p.article_id,
+          m.url,
+          COALESCE(NULLIF(p.alt_text, ''), NULLIF(m.alt_text, ''), m.name) AS alt_text,
+          p.after_paragraph,
+          p.sort_order,
+          p.created_at
+         FROM cms_article_media p
+         JOIN cms_media_assets m ON m.id = p.media_id
+         WHERE m.media_type = 'image'
+         ORDER BY p.article_id ASC, p.after_paragraph ASC, p.sort_order ASC, p.created_at ASC`
+      )
+      .all<{ article_id: string; url: string; alt_text: string }>();
+
+    const firstImageByArticle = new Map<string, { url: string; alt: string }>();
+    for (const item of result.results ?? []) {
+      if (!firstImageByArticle.has(item.article_id) && item.url) {
+        firstImageByArticle.set(item.article_id, {
+          url: item.url,
+          alt: item.alt_text || ''
+        });
+      }
+    }
+
+    return articles.map((article) => {
+      if (article.image?.trim() || !article.id) return article;
+      const fallback = firstImageByArticle.get(article.id);
+      if (!fallback) return article;
+
+      return {
+        ...article,
+        image: fallback.url,
+        imageAlt: article.imageAlt || fallback.alt || article.title
+      };
+    });
+  } catch {
+    return articles;
+  }
+}
+
 export async function getPublishedArticles(db?: ElseedD1Database) {
   if (!db) return magazineArticles;
 
@@ -274,7 +324,7 @@ export async function getPublishedArticles(db?: ElseedD1Database) {
       .all<CmsArticleRow>();
 
     if (!result.results?.length) return magazineArticles;
-    return result.results.map(rowToArticle);
+    return hydrateArticleImages(db, result.results.map(rowToArticle));
   } catch {
     return magazineArticles;
   }
@@ -287,7 +337,10 @@ export async function getPublishedArticle(db: ElseedD1Database | undefined, slug
         .prepare(`SELECT * FROM cms_articles WHERE slug = ? AND status = 'published' LIMIT 1`)
         .bind(slug)
         .first<CmsArticleRow>();
-      if (row) return rowToArticle(row);
+      if (row) {
+        const [article] = await hydrateArticleImages(db, [rowToArticle(row)]);
+        return article;
+      }
     } catch {
       // Static fallback below.
     }
