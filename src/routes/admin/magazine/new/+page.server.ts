@@ -1,4 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
+import type { Cookies } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { isAdminAuthenticated } from '$lib/server/adminAuth';
 import {
@@ -19,7 +20,7 @@ export const load: PageServerLoad = async ({ cookies, platform }) => {
   };
 };
 
-async function requireDb(cookies: Parameters<Actions[string]>[0]['cookies'], platform?: App.Platform) {
+async function requireDb(cookies: Cookies, platform?: App.Platform) {
   if (!(await isAdminAuthenticated(cookies, platform))) {
     throw redirect(303, '/admin/login');
   }
