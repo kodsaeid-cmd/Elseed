@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ cookies, platform }) => {
          FROM journey_sessions ORDER BY started_at DESC LIMIT 50`
       ).all<Record<string, any>>(),
       db.prepare(
-        `SELECT anonymous_id, preferences_json, updated_at
+        `SELECT anonymous_id, preferences_json, caffeine_profile_json, updated_at
          FROM coffee_profiles ORDER BY updated_at DESC LIMIT 30`
       ).all<Record<string, any>>()
     ]);
@@ -30,11 +30,16 @@ export const load: PageServerLoad = async ({ cookies, platform }) => {
       recent: recent.results ?? [],
       profiles: (profiles.results ?? []).map((item) => {
         let profile: Record<string, any> = {};
+        let caffeine: Record<string, any> = {};
         try { profile = JSON.parse(item.preferences_json || '{}'); } catch { profile = {}; }
+        try { caffeine = JSON.parse(item.caffeine_profile_json || '{}'); } catch { caffeine = {}; }
+        const signals = caffeine?.signals && typeof caffeine.signals === 'object' ? caffeine.signals : {};
         return {
           anonymous_id: String(item.anonymous_id ?? ''),
           updated_at: String(item.updated_at ?? ''),
-          profile
+          profile,
+          signals,
+          signalCount: Object.keys(signals).length
         };
       })
     };
