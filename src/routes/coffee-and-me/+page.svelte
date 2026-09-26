@@ -24,6 +24,25 @@
     updatedAt: string | null;
   };
 
+  type DailyStory = {
+    id: string;
+    slug: string;
+    title: string;
+    kicker: string;
+    excerpt: string;
+    story: string;
+    lesson: string;
+    type: string;
+    era: string;
+    place: string;
+    image: string;
+    sourceLabel: string;
+    sourceUrl: string;
+    factual: boolean;
+    featured: boolean;
+    localDate?: string;
+  };
+
   type MeQuestion = {
     key: string;
     eyebrow: string;
@@ -75,6 +94,10 @@
   let loading = $state(true);
   let savingKey = $state('');
   let activeQuestion = $state(0);
+  let dailyStory = $state<DailyStory | null>(null);
+  let storyHistory = $state<DailyStory[]>([]);
+  let storyLoading = $state(true);
+  let storyExpanded = $state(false);
 
   const lineLabels: Record<string, string> = {
     FULL: 'پرقدرت',
@@ -124,6 +147,34 @@
     return id;
   }
 
+  function todayLocalDate() {
+    const date = new Date();
+    const pad = (value: number) => String(value).padStart(2, '0');
+    return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
+  }
+
+  async function loadDailyStory() {
+    storyLoading = true;
+    try {
+      const id = await getAnonymousId();
+      const response = await fetch('/api/stories/daily', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ anonymousId: id, localDate: todayLocalDate() })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        dailyStory = data?.story ?? null;
+        storyHistory = Array.isArray(data?.history) ? data.history : [];
+      }
+    } catch {
+      dailyStory = null;
+      storyHistory = [];
+    } finally {
+      storyLoading = false;
+    }
+  }
+
   async function loadProfile() {
     loading = true;
     try {
@@ -167,7 +218,10 @@
   }
 
   $effect(() => {
-    if (typeof window !== 'undefined') void loadProfile();
+    if (typeof window !== 'undefined') {
+      void loadProfile();
+      void loadDailyStory();
+    }
   });
 
   const prefs = $derived(profile?.preferences ?? {});
@@ -246,6 +300,87 @@
           <small>جواب‌هایی که از مقاله‌ها و Q&Aهای EL.SEED به پروفایلت اضافه شده.</small>
           <a href="#quick-profile">پروفایل رو کامل‌تر کنم</a>
         </article>
+      </section>
+
+      <section class="daily-story-section">
+        <div class="section-head story-section-head">
+          <div>
+            <span>STORY OF THE DAY</span>
+            <h2>داستان امروزت</h2>
+          </div>
+          <p>هر روز یک داستان متفاوت از میان Story Library؛ برای هر کاربر تصادفی انتخاب می‌شه و تا آخر همون روز ثابت می‌مونه.</p>
+        </div>
+
+        {#if storyLoading}
+          <div class="story-loading">داریم داستان امروزت رو از قفسه برمی‌داریم…</div>
+        {:else if dailyStory}
+          <article class="daily-story-card">
+            <div class="daily-story-visual">
+              {#if dailyStory.image}
+                <img src={dailyStory.image} alt="" />
+              {/if}
+              <div class="story-visual-overlay">
+                <span>{dailyStory.factual ? 'روایت تاریخی' : 'حکایت قهوه‌ای'}</span>
+                <strong>{dailyStory.era || 'امروز'}</strong>
+              </div>
+            </div>
+
+            <div class="daily-story-copy">
+              <div class="story-meta">
+                <span>{dailyStory.kicker}</span>
+                {#if dailyStory.place}<small>{dailyStory.place}</small>{/if}
+              </div>
+
+              <h3>{dailyStory.title}</h3>
+              <p class="story-excerpt">{dailyStory.excerpt}</p>
+
+              {#if storyExpanded}
+                <div class="story-full">
+                  <p>{dailyStory.story}</p>
+
+                  {#if dailyStory.lesson}
+                    <blockquote>
+                      <span>چیزی که با خودت ببر</span>
+                      <strong>{dailyStory.lesson}</strong>
+                    </blockquote>
+                  {/if}
+
+                  {#if dailyStory.factual && dailyStory.sourceLabel && dailyStory.sourceUrl}
+                    <a class="story-source" href={dailyStory.sourceUrl} target="_blank" rel="noreferrer">
+                      منبع روایت: {dailyStory.sourceLabel}
+                    </a>
+                  {:else if !dailyStory.factual}
+                    <span class="story-fiction-note">این متن یک حکایت ادبی/الهام‌گرفته است و ادعای تاریخی ندارد.</span>
+                  {/if}
+                </div>
+              {/if}
+
+              <button class="story-read-button" type="button" onclick={() => (storyExpanded = !storyExpanded)}>
+                {storyExpanded ? 'بستن داستان' : 'داستان رو بخون'}
+              </button>
+            </div>
+          </article>
+
+          {#if storyHistory.length > 1}
+            <div class="story-history">
+              <div class="story-history-head">
+                <span>داستان‌های قبلی من</span>
+                <small>Storyها تا ۱۸۰ روز تکرار نمی‌شن، مگر کتابخانه هنوز کوچک باشه.</small>
+              </div>
+              <div class="story-history-list">
+                {#each storyHistory.slice(1, 7) as item}
+                  <article>
+                    <span>{item.factual ? 'تاریخی' : 'حکایت'}</span>
+                    <strong>{item.title}</strong>
+                    <small>{item.localDate ?? ''}</small>
+                  </article>
+                {/each}
+              </div>
+            </div>
+          {/if}
+        {:else}
+          <div class="story-loading">Story Library هنوز داستان منتشرشده‌ای نداره.</div>
+        {/if}
       </section>
 
       <section class="signal-board">
@@ -350,7 +485,16 @@
   .me-loading{margin-top:20px;padding:60px;border:1px dashed rgba(66,38,29,.12);border-radius:22px;text-align:center;color:#917d74}
   .profile-overview{margin-top:18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.profile-card{min-height:190px;padding:18px;border:1px solid rgba(66,38,29,.08);border-radius:20px;background:rgba(255,255,255,.58);display:flex;flex-direction:column}.profile-card>span{font-size:.61rem;color:#aa7248}.profile-card>strong{margin-top:12px;font-size:1.15rem;line-height:1.65}.profile-card>small{margin-top:6px;color:#8d786e;font-size:.64rem;line-height:1.85}.profile-card>a{margin-top:auto;padding-top:16px;font-size:.66rem;font-weight:800;color:#6d4635}.taste-card{background:#f2dfca}.fix-card{background:#fffaf4}.signal-card{background:#42261d;color:#fff}.signal-card>span,.signal-card>small,.signal-card>a{color:rgba(255,255,255,.68)}
 
-  .signal-board,.quick-profile,.for-you{margin-top:46px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:16px}.section-head h2{margin:4px 0 0;font-size:1.7rem}.section-head>p{max-width:500px;margin:0;color:#8c786f;font-size:.68rem;line-height:1.9}.section-head>a{font-size:.7rem;font-weight:800;color:#6b4637}
+  .daily-story-section,.signal-board,.quick-profile,.for-you{margin-top:46px}
+  .story-section-head{margin-bottom:16px}
+  .story-loading{padding:34px;border:1px dashed rgba(66,38,29,.13);border-radius:22px;text-align:center;color:#8d786f;background:rgba(255,255,255,.34);font-size:.72rem}
+  .daily-story-card{display:grid;grid-template-columns:minmax(300px,.86fr) minmax(0,1.14fr);min-height:390px;border:1px solid rgba(66,38,29,.09);border-radius:28px;overflow:hidden;background:#fffaf5;box-shadow:0 20px 55px rgba(66,38,29,.055)}
+  .daily-story-visual{position:relative;min-height:390px;background:#e8d6c4;overflow:hidden}.daily-story-visual img{width:100%;height:100%;object-fit:cover;filter:saturate(.78) contrast(.98);transition:transform .5s ease}.daily-story-card:hover .daily-story-visual img{transform:scale(1.025)}
+  .story-visual-overlay{position:absolute;inset:auto 18px 18px 18px;display:flex;align-items:end;justify-content:space-between;gap:12px;color:#fff}.story-visual-overlay:before{content:'';position:absolute;inset:-70px -18px -18px;background:linear-gradient(transparent,rgba(38,22,16,.72));z-index:-1}.story-visual-overlay span{font-size:.6rem;font-weight:800}.story-visual-overlay strong{direction:ltr;font-size:.72rem}
+  .daily-story-copy{padding:30px 32px;display:flex;flex-direction:column;align-items:flex-start}.story-meta{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px}.story-meta span{color:#bd7739;font-size:.62rem;font-weight:800}.story-meta small{color:#9b857b;font-size:.58rem}.daily-story-copy h3{margin:16px 0 8px;font-size:clamp(1.8rem,3vw,2.7rem);line-height:1.55;letter-spacing:-.025em}.story-excerpt{margin:0;color:#7f6c64;font-size:.82rem;line-height:2}.story-full{margin-top:18px;padding-top:17px;border-top:1px solid rgba(66,38,29,.08);width:100%}.story-full>p{margin:0;color:#654f46;font-size:.78rem;line-height:2.15}.story-full blockquote{margin:20px 0 0;padding:15px 17px;border:0;border-right:3px solid #c27d3e;border-radius:14px;background:#f1e0ce}.story-full blockquote span{display:block;color:#ad6c34;font-size:.58rem}.story-full blockquote strong{display:block;margin-top:5px;font-size:.78rem;line-height:1.95}.story-source,.story-fiction-note{display:inline-block;margin-top:15px;color:#886e61;font-size:.58rem;line-height:1.8}.story-source{text-decoration:underline;text-underline-offset:3px}
+  .story-read-button{margin-top:auto;min-height:43px;padding:0 16px;border:0;border-radius:999px;background:#42261d;color:#fff;font:inherit;font-size:.68rem;font-weight:800;cursor:pointer}
+  .story-history{margin-top:12px;padding:15px;border:1px solid rgba(66,38,29,.08);border-radius:20px;background:rgba(255,255,255,.42)}.story-history-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px}.story-history-head span{font-size:.68rem;font-weight:800}.story-history-head small{font-size:.54rem;color:#968178}.story-history-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.story-history-list article{padding:11px;border-radius:13px;background:#fffaf5;display:grid;gap:3px}.story-history-list span{font-size:.48rem;color:#b3713b}.story-history-list strong{font-size:.62rem;line-height:1.65}.story-history-list small{direction:ltr;text-align:right;font-size:.48rem;color:#a18d83}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:16px}.section-head h2{margin:4px 0 0;font-size:1.7rem}.section-head>p{max-width:500px;margin:0;color:#8c786f;font-size:.68rem;line-height:1.9}.section-head>a{font-size:.7rem;font-weight:800;color:#6b4637}
   .signal-list{display:flex;flex-wrap:wrap;gap:8px}.signal-list>span{display:inline-flex;gap:7px;align-items:center;padding:9px 11px;border-radius:999px;background:#fffaf4;border:1px solid rgba(66,38,29,.08);font-size:.65rem;color:#6f554b}.signal-list b{color:#b2703b;font-weight:800}.empty-signal{width:100%;padding:26px;border:1px dashed rgba(66,38,29,.12);border-radius:16px;color:#8f7a71;text-align:center}
 
   .me-question{padding:24px;border:1px solid rgba(66,38,29,.08);border-radius:26px;background:rgba(255,255,255,.56)}.question-copy{max-width:760px}.question-copy>span{color:#c57d3c;font-size:.63rem;font-weight:800}.question-copy h3{margin:5px 0 7px;font-size:1.6rem;line-height:1.6}.question-copy p{margin:0;color:#88736a;font-size:.72rem;line-height:1.9}
@@ -358,6 +502,6 @@
 
   .for-you-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.for-you-card{min-height:150px;padding:18px;border:1px solid rgba(66,38,29,.08);border-radius:20px;background:#fffaf4;color:inherit;display:flex;flex-direction:column;justify-content:flex-end;transition:.2s ease}.for-you-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(66,38,29,.06)}.for-you-card span{color:#b27341;font-size:.59rem}.for-you-card h3{margin:7px 0 0;font-size:1rem;line-height:1.8}
 
-  @media(max-width:900px){.me-hero{grid-template-columns:1fr}.profile-progress-card{max-width:300px}.profile-overview{grid-template-columns:repeat(2,1fr)}.me-options{grid-template-columns:repeat(2,1fr)}.for-you-grid{grid-template-columns:1fr}}
-  @media(max-width:560px){.me-page{padding-top:18px}.me-hero h1{font-size:3rem}.profile-overview,.me-options{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.profile-card{min-height:160px}}
+  @media(max-width:900px){.me-hero{grid-template-columns:1fr}.profile-progress-card{max-width:300px}.profile-overview{grid-template-columns:repeat(2,1fr)}.daily-story-card{grid-template-columns:1fr}.daily-story-visual{min-height:280px}.story-history-list{grid-template-columns:repeat(2,1fr)}.me-options{grid-template-columns:repeat(2,1fr)}.for-you-grid{grid-template-columns:1fr}}
+  @media(max-width:560px){.me-page{padding-top:18px}.me-hero h1{font-size:3rem}.profile-overview,.me-options{grid-template-columns:1fr}.section-head,.story-history-head{align-items:flex-start;flex-direction:column}.profile-card{min-height:160px}.daily-story-copy{padding:22px 19px}.daily-story-visual{min-height:230px}.story-history-list{grid-template-columns:1fr}}
 </style>
