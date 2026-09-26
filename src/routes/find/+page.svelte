@@ -25,7 +25,7 @@
       title: 'معمولاً کی قهوه می‌خوری؟',
       subtitle: 'فقط چیزی که بیشتر شبیه زندگی واقعی توئه را انتخاب کن.',
       options: [
-        { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/media/find/time-morning-human-v3.webp' },
+        { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/media/find/time-morning-human-v4.webp' },
         { value: 'day', title: 'صبح و وسط روز', description: 'همراه کار و تمرکز', icon: '◐', image: '/media/time-day-v2' },
         { value: 'afternoon', title: 'عصر', description: 'هنوز قهوه می‌خوام، ولی سبک‌تر', icon: '🌤', image: '/media/time-afternoon-v4' },
         { value: 'night', title: 'شب', description: 'بیشتر برای حال و مزه', icon: '☾', image: '/media/time-night' }
@@ -49,7 +49,7 @@
       title: 'کافئین باهات چطوره؟',
       subtitle: 'این جواب فقط برای انتخاب شدت مناسب استفاده می‌شود.',
       options: [
-        { value: 'none', title: 'هیچ مشکلی ندارم', description: 'قهوه معمولاً اذیتم نمی‌کنه', icon: '●', image: '/media/find/sensitivity-none-human-v3.png' },
+        { value: 'none', title: 'هیچ مشکلی ندارم', description: 'قهوه معمولاً اذیتم نمی‌کنه', icon: '●', image: '/media/find/sensitivity-none-human-v4.webp' },
         { value: 'some', title: 'گاهی زیادی می‌شه', description: 'بعضی قهوه‌ها برام سنگین‌اند', icon: '◒', image: '/media/find/sensitivity-some-human-v3.png' },
         { value: 'high', title: 'بهش حساسم', description: 'ترجیح می‌دم ملایم‌تر باشه', icon: '○', image: '/media/find/sensitivity-high-human-v3.png' },
         { value: 'sleep', title: 'روی خوابم اثر می‌ذاره', description: 'خصوصاً اگر دیرتر بخورم', icon: '☾', image: '/media/find/sensitivity-sleep-human-v3.png' }
