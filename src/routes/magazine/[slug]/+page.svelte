@@ -12,8 +12,8 @@
     headline: article.title,
     description: article.excerpt,
     image: article.image,
-    datePublished: article.publishedAt,
-    dateModified: article.updatedAt ?? article.publishedAt,
+    datePublished: article.publishedIso,
+    dateModified: article.updatedIso ?? article.publishedIso,
     author: {
       '@type': 'Organization',
       name: 'EL.SEED'
