@@ -1,6 +1,8 @@
 interface ElseedD1PreparedStatement {
   bind(...values: unknown[]): ElseedD1PreparedStatement;
-  run(): Promise<{ success?: boolean; error?: string }>;
+  run(): Promise<{ success?: boolean; error?: string; meta?: unknown }>;
+  first<T = Record<string, unknown>>(): Promise<T | null>;
+  all<T = Record<string, unknown>>(): Promise<{ results?: T[]; success?: boolean; error?: string }>;
 }
 
 interface ElseedD1Database {
