@@ -4,6 +4,7 @@ import { isAdminAuthenticated } from '$lib/server/adminAuth';
 import {
   deleteAdminArticle,
   getAdminArticle,
+  getAdminArticles,
   parseArticleForm,
   updateAdminArticle
 } from '$lib/server/cms';
@@ -19,7 +20,11 @@ export const load: PageServerLoad = async ({ params, cookies, platform }) => {
   const article = await getAdminArticle(db, params.id);
   if (!article) throw error(404, 'مقاله پیدا نشد.');
 
-  return { article };
+  const articles = await getAdminArticles(db);
+  return {
+    article,
+    articleOptions: articles.map((item) => ({ id: item.id, slug: item.slug, title: item.title }))
+  };
 };
 
 export const actions: Actions = {
