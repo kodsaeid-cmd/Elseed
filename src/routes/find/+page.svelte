@@ -25,7 +25,7 @@
       title: 'معمولاً کی قهوه می‌خوری؟',
       subtitle: 'فقط چیزی که بیشتر شبیه زندگی واقعی توئه را انتخاب کن.',
       options: [
-        { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/media/time-day-v2' },
+        { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/media/time-morning' },
         { value: 'day', title: 'صبح و وسط روز', description: 'همراه کار و تمرکز', icon: '◐', image: '/media/time-day-v2' },
         { value: 'afternoon', title: 'عصر', description: 'هنوز قهوه می‌خوام، ولی سبک‌تر', icon: '🌤', image: '/media/time-afternoon-v4' },
         { value: 'night', title: 'شب', description: 'بیشتر برای حال و مزه', icon: '☾', image: '/media/time-night' }
@@ -34,13 +34,13 @@
     {
       key: 'effect',
       eyebrow: '۲ از ۵',
-      title: 'از قهوه چی می‌خوای؟',
-      subtitle: 'نه اصطلاح تخصصی؛ فقط حسی که از فنجانت می‌خوای.',
+      title: 'قهوه قراره برات چیکار کنه؟',
+      subtitle: 'نه اصطلاح تخصصی؛ فقط نقشی که می‌خوای فنجانت برات بازی کنه.',
       options: [
-        { value: 'strong', title: 'منو راه بندازه', description: 'انرژی و ضربه‌ی واضح', icon: '⚡', image: '/media/flavor-bold?v=effect-2' },
-        { value: 'balanced', title: 'انرژی متعادل', description: 'سرحال، بدون زیادی شلوغ شدن', icon: '↗', image: '/media/flavor-caramel?v=effect-2' },
-        { value: 'many', title: 'چند فنجان در روز', description: 'می‌خوام جا برای فنجان بعدی هم باشه', icon: '∞', image: '/media/flavor-fruity?v=effect-2' },
-        { value: 'taste', title: 'بیشتر برای مزه', description: 'خود تجربه قهوه برام مهم‌تره', icon: '♡', image: '/media/flavor-chocolate?v=effect-2' }
+        { value: 'strong', title: 'منو راه بندازه', description: 'یه شروع قوی و انرژی واضح می‌خوام', icon: '⚡', image: '/media/effect-strong' },
+        { value: 'balanced', title: 'کمکم کنه تمرکز کنم', description: 'انرژی متعادل برای کار و تمرکز', icon: '↗', image: '/media/effect-balanced' },
+        { value: 'many', title: 'بتونم چند فنجان بخورم', description: 'می‌خوام جا برای فنجان بعدی هم باشه', icon: '∞', image: '/media/effect-many' },
+        { value: 'taste', title: 'فقط خود قهوه رو می‌خوام', description: 'بیشتر برای مزه و حس خوبش', icon: '♡', image: '/media/effect-taste' }
       ]
     },
     {
@@ -49,10 +49,10 @@
       title: 'کافئین باهات چطوره؟',
       subtitle: 'این جواب فقط برای انتخاب شدت مناسب استفاده می‌شود.',
       options: [
-        { value: 'none', title: 'هیچ مشکلی ندارم', description: 'قهوه معمولاً اذیتم نمی‌کنه', icon: '●' },
-        { value: 'some', title: 'گاهی زیادی می‌شه', description: 'بعضی قهوه‌ها برام سنگین‌اند', icon: '◒' },
-        { value: 'high', title: 'بهش حساسم', description: 'ترجیح می‌دم ملایم‌تر باشه', icon: '○' },
-        { value: 'sleep', title: 'روی خوابم اثر می‌ذاره', description: 'خصوصاً اگر دیرتر بخورم', icon: '☾' }
+        { value: 'none', title: 'هیچ مشکلی ندارم', description: 'قهوه معمولاً اذیتم نمی‌کنه', icon: '●', image: '/media/sensitivity-none' },
+        { value: 'some', title: 'گاهی زیادی می‌شه', description: 'بعضی قهوه‌ها برام سنگین‌اند', icon: '◒', image: '/media/sensitivity-some' },
+        { value: 'high', title: 'بهش حساسم', description: 'ترجیح می‌دم ملایم‌تر باشه', icon: '○', image: '/media/sensitivity-high' },
+        { value: 'sleep', title: 'روی خوابم اثر می‌ذاره', description: 'خصوصاً اگر دیرتر بخورم', icon: '☾', image: '/media/sensitivity-sleep' }
       ]
     },
     {
@@ -72,14 +72,14 @@
       key: 'brew',
       eyebrow: '۵ از ۵',
       title: 'معمولاً چجوری درستش می‌کنی؟',
-      subtitle: 'همین انتخاب روی رُست و نسخه‌ای که به رُستری می‌گی اثر دارد.',
+      subtitle: 'روش دم‌آوری کمک می‌کنه رُست و نسخه مناسب‌تری برات انتخاب کنیم.',
       options: [
-        { value: 'espresso', title: 'اسپرسوساز', description: 'خانگی یا نیمه‌صنعتی', icon: '▣' },
-        { value: 'moka', title: 'موکاپات', description: 'غلیظ و کلاسیک', icon: '♨' },
-        { value: 'v60', title: 'V60 / پوراور', description: 'تمیز و شفاف', icon: '▽' },
-        { value: 'french', title: 'فرنچ‌پرس', description: 'پرتر و راحت', icon: '▤' },
-        { value: 'filter', title: 'قهوه‌ساز فیلتری', description: 'برای فنجان‌های روزانه', icon: '⌁' },
-        { value: 'unsure', title: 'هنوز نمی‌دونم', description: 'نسخه عمومی بده', icon: '?' }
+        { value: 'espresso', title: 'اسپرسوساز', description: 'خانگی یا نیمه‌صنعتی', icon: '▣', image: '/media/brew-espresso' },
+        { value: 'moka', title: 'موکاپات', description: 'غلیظ و کلاسیک', icon: '♨', image: '/media/brew-moka' },
+        { value: 'v60', title: 'V60 / پوراور', description: 'تمیز و شفاف', icon: '▽', image: '/media/brew-v60' },
+        { value: 'french', title: 'فرنچ‌پرس', description: 'پرتر و راحت', icon: '▤', image: '/media/brew-french' },
+        { value: 'filter', title: 'قهوه‌ساز فیلتری', description: 'برای فنجان‌های روزانه', icon: '⌁', image: '/media/brew-filter' },
+        { value: 'unsure', title: 'هنوز نمی‌دونم', description: 'نسخه عمومی بده', icon: '?', image: '/media/brew-unsure' }
       ]
     }
   ];
@@ -211,6 +211,8 @@
         class:find-options-five={questions[step].options.length > 4}
         class:find-options-time={questions[step].key === 'time'}
         class:find-options-effect={questions[step].key === 'effect'}
+        class:find-options-sensitivity={questions[step].key === 'sensitivity'}
+        class:find-options-brew={questions[step].key === 'brew'}
         class="find-options"
       >
         {#each questions[step].options as option}
@@ -247,8 +249,12 @@
     <section class="find-result shell">
       <div class="result-intro">
         <span class="find-kicker">پروفایل قهوه تو آماده‌ست</span>
-        <h1>تو یک <b>{result.lineName}</b> هستی.</h1>
-        <p>{result.lineDescription}</p>
+        <h1>قهوه‌ای که به زندگی تو می‌خوره این شکلیه.</h1>
+        <p>
+          بر اساس جواب‌هات، نزدیک‌ترین لاین برای تو
+          <b>{result.lineName}</b>
+          است. {result.lineDescription}
+        </p>
       </div>
 
       <div class="result-grid">
