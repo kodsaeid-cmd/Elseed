@@ -1,14 +1,16 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { isAdminAuthenticated } from '$lib/server/adminAuth';
-import { createAdminArticle, ensureCmsSeed, parseArticleForm } from '$lib/server/cms';
+import { createAdminArticle, getAdminArticles, parseArticleForm } from '$lib/server/cms';
 
 export const load: PageServerLoad = async ({ cookies, platform }) => {
   if (!(await isAdminAuthenticated(cookies, platform))) {
     throw redirect(303, '/admin/login');
   }
-  if (platform?.env?.DB) await ensureCmsSeed(platform.env.DB);
-  return {};
+  const articles = await getAdminArticles(platform?.env?.DB);
+  return {
+    articleOptions: articles.map((item) => ({ id: item.id, slug: item.slug, title: item.title }))
+  };
 };
 
 export const actions: Actions = {
