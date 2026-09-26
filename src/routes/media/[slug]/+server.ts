@@ -49,7 +49,22 @@ const images: Record<string, string> = {
   'brew-v60': 'https://unsplash.com/photos/Na9Nf29-tYU/download?force=true&w=1400',
   'brew-french': 'https://unsplash.com/photos/wjTVOq5JTIU/download?force=true&w=1400',
   'brew-filter': 'https://unsplash.com/photos/4SbIieFtx74/download?force=true&w=1400',
-  'brew-unsure': 'https://unsplash.com/photos/mgvCv7Ht5hw/download?force=true&w=1400'
+  'brew-unsure': 'https://unsplash.com/photos/mgvCv7Ht5hw/download?force=true&w=1400',
+  'time-morning-human-v2': 'https://images.pexels.com/photos/18287651/pexels-photo-18287651.jpeg?auto=compress&cs=tinysrgb&w=1600',
+  'effect-strong-human-v2': 'https://images.pexels.com/photos/15356224/pexels-photo-15356224.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'effect-balanced-human-v2': 'https://images.pexels.com/photos/3184647/pexels-photo-3184647.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'effect-many-human-v2': 'https://images.pexels.com/photos/1595390/pexels-photo-1595390.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'effect-taste-human-v2': 'https://images.pexels.com/photos/19332203/pexels-photo-19332203.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'sensitivity-none-human-v2': 'https://images.pexels.com/photos/7580957/pexels-photo-7580957.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'sensitivity-some-human-v2': 'https://images.pexels.com/photos/20955029/pexels-photo-20955029.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'sensitivity-high-human-v2': 'https://images.pexels.com/photos/12182488/pexels-photo-12182488.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'sensitivity-sleep-human-v2': 'https://images.pexels.com/photos/36713413/pexels-photo-36713413.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'brew-espresso-human-v2': 'https://images.pexels.com/photos/302898/pexels-photo-302898.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'brew-moka-human-v2': 'https://images.pexels.com/photos/7243725/pexels-photo-7243725.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'brew-v60-human-v2': 'https://images.pexels.com/photos/15138582/pexels-photo-15138582.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'brew-french-human-v2': 'https://images.pexels.com/photos/7488694/pexels-photo-7488694.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'brew-filter-human-v2': 'https://images.pexels.com/photos/8937266/pexels-photo-8937266.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'brew-unsure-human-v2': 'https://images.pexels.com/photos/15909946/pexels-photo-15909946.jpeg?auto=compress&cs=tinysrgb&w=1400'
 };
 
 function imageResponse(base64: string) {
