@@ -139,6 +139,14 @@
   let ctaHref = $state(String(initialCta.href ?? ''));
   let ctaText = $state(String(initialCta.text ?? ''));
 
+  let featuredUploading = $state(false);
+  let featuredMediaLoading = $state(false);
+  let featuredMediaOpen = $state(false);
+  let featuredAssets = $state<Record<string, any>[]>([]);
+  let featuredMediaError = $state('');
+  let featuredMediaNotice = $state('');
+  let featuredFileInput: HTMLInputElement | undefined;
+
   const articleSaved = $derived(Boolean(initial.id));
   const textReady = $derived(Boolean(articleTitle.trim() && articleSlug.trim() && body.trim()));
   const publisherReady = $derived(Boolean(publisher.name.trim()));
@@ -201,6 +209,125 @@
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '');
     if (generated) articleSlug = generated;
+  }
+
+  async function mediaRequest(url: string, options?: RequestInit) {
+    const response = await fetch(url, options);
+    if (response.status === 401) {
+      window.location.href = '/admin/login';
+      throw new Error('دسترسی مدیر الزامی است.');
+    }
+    const data = await response.json();
+    if (!response.ok) throw new Error(data?.error || 'خطا در ارتباط با سرور');
+    return data;
+  }
+
+  async function persistFeaturedMedia(mediaId: string, url: string, alt: string) {
+    coverImage = url;
+    coverAlt = alt || coverAlt || articleTitle;
+
+    if (!articleSaved) return;
+
+    await mediaRequest('/admin/api/media', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        action: 'set_featured_media',
+        articleId: String(initial.id),
+        mediaId,
+        alt: coverAlt
+      })
+    });
+  }
+
+  async function uploadFeaturedImage(event: Event) {
+    const input = event.currentTarget as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file || featuredUploading) return;
+
+    featuredUploading = true;
+    featuredMediaError = '';
+    featuredMediaNotice = '';
+
+    try {
+      if (!file.type.startsWith('image/')) {
+        throw new Error('برای تصویر شاخص فقط فایل تصویری انتخاب کن.');
+      }
+
+      const formData = new FormData();
+      formData.set('file', file);
+      formData.set('alt', coverAlt || articleTitle || file.name.replace(/\.[^.]+$/, ''));
+
+      const data = await mediaRequest('/admin/api/media', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!data.asset?.id || !data.asset?.url) {
+        throw new Error('آپلود تصویر کامل نشد.');
+      }
+
+      await persistFeaturedMedia(
+        data.asset.id,
+        data.asset.url,
+        data.asset.alt_text || coverAlt || articleTitle
+      );
+
+      featuredMediaNotice = articleSaved
+        ? 'تصویر آپلود شد و به‌عنوان تصویر شاخص ذخیره شد.'
+        : 'تصویر آپلود شد؛ با ذخیره مقاله به‌عنوان تصویر شاخص ثبت می‌شود.';
+    } catch (caught) {
+      featuredMediaError =
+        caught instanceof Error ? caught.message : 'آپلود تصویر شاخص انجام نشد.';
+    } finally {
+      featuredUploading = false;
+      if (featuredFileInput) featuredFileInput.value = '';
+    }
+  }
+
+  async function loadFeaturedLibrary() {
+    featuredMediaOpen = !featuredMediaOpen;
+    if (!featuredMediaOpen || featuredAssets.length || featuredMediaLoading) return;
+
+    featuredMediaLoading = true;
+    featuredMediaError = '';
+
+    try {
+      const data = await mediaRequest('/admin/api/media');
+      featuredAssets = (data.assets ?? []).filter((asset: any) => asset.media_type === 'image');
+    } catch (caught) {
+      featuredMediaError =
+        caught instanceof Error ? caught.message : 'کتابخانه تصاویر دریافت نشد.';
+    } finally {
+      featuredMediaLoading = false;
+    }
+  }
+
+  async function chooseFeaturedFromLibrary(asset: Record<string, any>) {
+    featuredMediaError = '';
+    featuredMediaNotice = '';
+
+    try {
+      await persistFeaturedMedia(
+        String(asset.id),
+        String(asset.url),
+        String(asset.alt_text || asset.name || articleTitle)
+      );
+      featuredMediaOpen = false;
+      featuredMediaNotice = articleSaved
+        ? 'تصویر کتابخانه به‌عنوان تصویر شاخص ذخیره شد.'
+        : 'تصویر انتخاب شد؛ با ذخیره مقاله ثبت می‌شود.';
+    } catch (caught) {
+      featuredMediaError =
+        caught instanceof Error ? caught.message : 'انتخاب تصویر شاخص انجام نشد.';
+    }
+  }
+
+  function clearFeaturedImage() {
+    coverImage = '';
+    coverAlt = '';
+    featuredMediaNotice = '';
+    featuredMediaError = '';
   }
 
   function cancelEditor() {
@@ -413,17 +540,68 @@
               </div>
 
               <div class="featured-fields">
-                <a class="upload-image" href="/admin/media">▦ انتخاب از کتابخانه رسانه</a>
+                <label class="featured-upload-button" class:busy={featuredUploading}>
+                  <input
+                    bind:this={featuredFileInput}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+                    disabled={featuredUploading}
+                    onchange={uploadFeaturedImage}
+                  />
+                  <span>{featuredUploading ? 'در حال آپلود…' : '↑ آپلود تصویر شاخص'}</span>
+                  <small>JPG / PNG / WebP / AVIF / GIF · حداکثر ۱۰MB</small>
+                </label>
+
+                <button class="upload-image" type="button" onclick={loadFeaturedLibrary}>
+                  ▦ {featuredMediaOpen ? 'بستن کتابخانه' : 'انتخاب از کتابخانه رسانه'}
+                </button>
+
+                {#if featuredMediaOpen}
+                  <div class="featured-library">
+                    {#if featuredMediaLoading}
+                      <div class="featured-library-state">در حال دریافت تصاویر…</div>
+                    {:else if featuredAssets.length}
+                      <div class="featured-library-grid">
+                        {#each featuredAssets as asset}
+                          <button
+                            type="button"
+                            class:active={coverImage === asset.url}
+                            onclick={() => chooseFeaturedFromLibrary(asset)}
+                            title={asset.name}
+                          >
+                            <img src={asset.url} alt={asset.alt_text || asset.name || ''} loading="lazy" />
+                            <span>{asset.name}</span>
+                          </button>
+                        {/each}
+                      </div>
+                    {:else}
+                      <div class="featured-library-state">هنوز تصویری در Media Library نیست.</div>
+                    {/if}
+                  </div>
+                {/if}
+
+                <div class="featured-divider"><span>یا با URL</span></div>
+
                 <label>
                   URL تصویر
                   <input bind:value={coverImage} maxlength="1500" dir="ltr" placeholder="https://..." />
                 </label>
+
                 <label>
                   Alt تصویر شاخص
                   <input bind:value={coverAlt} maxlength="500" placeholder="توضیح دقیق و طبیعی تصویر" />
                 </label>
+
+                {#if featuredMediaNotice}
+                  <div class="featured-message success">{featuredMediaNotice}</div>
+                {/if}
+
+                {#if featuredMediaError}
+                  <div class="featured-message error">{featuredMediaError}</div>
+                {/if}
+
                 {#if coverImage}
-                  <button class="remove-image" type="button" onclick={() => { coverImage = ''; coverAlt = ''; }}>حذف تصویر شاخص از مطلب</button>
+                  <button class="remove-image" type="button" onclick={clearFeaturedImage}>حذف تصویر شاخص از مطلب</button>
                 {/if}
               </div>
             </div>
@@ -740,6 +918,14 @@
   .featured-preview img{width:100%;height:100%;object-fit:cover;display:block}.featured-preview.empty-preview>div{text-align:center;color:#82948f;display:grid;gap:5px}.featured-preview.empty-preview span{font-size:2rem}.featured-preview.empty-preview strong{font-size:.72rem}.featured-preview.empty-preview small{font-size:.58rem}
   .upload-image,.remove-image{border:0;border-radius:11px;padding:10px;font:inherit;font-size:.65rem;font-weight:900;cursor:pointer;text-align:center;text-decoration:none}
   .upload-image{background:#e5f4ef;color:#246f64}.remove-image{background:#fff1ed;color:#a15143}
+  .featured-upload-button{min-height:62px;border:1.5px dashed rgba(31,111,98,.25);border-radius:12px;background:#f7fbf9;display:grid!important;place-items:center;text-align:center;padding:10px;cursor:pointer;transition:.18s ease}
+  .featured-upload-button:hover{border-color:rgba(31,111,98,.5);background:#f1f8f5}.featured-upload-button.busy{opacity:.6;cursor:wait}
+  .featured-upload-button input{display:none}.featured-upload-button span{color:#256e64;font-size:.66rem;font-weight:900}.featured-upload-button small{margin-top:2px;color:#8b9996;font-size:.5rem;font-weight:500}
+  .featured-library{border:1px solid rgba(42,101,92,.09);border-radius:12px;background:#fafcfb;padding:8px;max-height:245px;overflow:auto}
+  .featured-library-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.featured-library-grid button{min-width:0;border:1px solid rgba(42,101,92,.08);border-radius:9px;background:#fff;padding:5px;cursor:pointer;text-align:right;color:#4e706a}.featured-library-grid button.active{border-color:#2b796d;box-shadow:0 0 0 2px rgba(43,121,109,.08)}
+  .featured-library-grid img{width:100%;height:72px;object-fit:cover;border-radius:6px;background:#edf3f1}.featured-library-grid span{display:block;margin-top:4px;font-size:.48rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .featured-library-state{padding:22px;text-align:center;color:#8d9b98;font-size:.55rem}.featured-divider{display:flex;align-items:center;gap:7px;color:#94a19e;font-size:.48rem}.featured-divider:before,.featured-divider:after{content:'';height:1px;flex:1;background:rgba(42,101,92,.08)}
+  .featured-message{padding:8px 9px;border-radius:9px;font-size:.55rem;line-height:1.6}.featured-message.success{background:#eaf7f1;color:#2b6e63}.featured-message.error{background:#fff0ec;color:#9d4d40}
   .media-gate{background:#fff;border:1px dashed rgba(45,103,95,.16);border-radius:18px;padding:20px;display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center}
   .gate-icon{width:46px;height:46px;border-radius:14px;background:#e8f4f0;color:#2e746a;display:grid;place-items:center;font-size:.7rem;font-weight:900}.media-gate strong{font-size:.76rem}.media-gate p{font-size:.62rem;color:#80918d;line-height:1.8;margin:3px 0 0}
   .primary{border:0;background:#176d67;color:white;border-radius:13px;padding:10px 15px;font:inherit;font-size:.68rem;font-weight:900;cursor:pointer;box-shadow:0 9px 24px rgba(23,109,103,.16);text-decoration:none;text-align:center}
