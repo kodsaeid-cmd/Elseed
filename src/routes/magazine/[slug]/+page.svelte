@@ -6,6 +6,21 @@
   const article = data.article;
   const related = data.related;
 
+  const faqSchema = article.faq?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: article.faq.map((item: any) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer
+          }
+        }))
+      }
+    : null;
+
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -38,6 +53,9 @@
   <meta property="og:type" content="article" />
   <meta property="og:image" content={article.image} />
   <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
+  {#if faqSchema}
+    <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
+  {/if}
 </svelte:head>
 
 <Header />
@@ -101,6 +119,32 @@
             {/if}
           </section>
         {/each}
+
+        {#if article.internalLinks?.length}
+          <nav class="article-inline-links" aria-label="لینک‌های مرتبط داخل EL.SEED">
+            <span>برای ادامه</span>
+            <div>
+              {#each article.internalLinks as link}
+                <a href={link.href}>{link.label} <i>←</i></a>
+              {/each}
+            </div>
+          </nav>
+        {/if}
+
+        {#if article.faq?.length}
+          <section class="article-faq">
+            <span class="magazine-category">FAQ</span>
+            <h2>سؤال‌های متداول</h2>
+            <div>
+              {#each article.faq as item}
+                <details>
+                  <summary>{item.question}</summary>
+                  <p>{item.answer}</p>
+                </details>
+              {/each}
+            </div>
+          </section>
+        {/if}
 
         <section class="article-takeaway">
           <span>اگر فقط یک چیز یادت بماند</span>
