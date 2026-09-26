@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getPublishedArticle, getPublishedArticles } from '$lib/server/cms';
+import { listPublicArticleMedia } from '$lib/server/media';
 
 export const load: PageServerLoad = async ({ params, platform }) => {
   const db = platform?.env?.DB;
@@ -11,6 +12,7 @@ export const load: PageServerLoad = async ({ params, platform }) => {
   }
 
   const articles = await getPublishedArticles(db);
+  const media = article.id ? await listPublicArticleMedia(db, article.id) : [];
   const preferred = (article.relatedSlugs ?? [])
     .map((slug) => articles.find((item) => item.slug === slug))
     .filter((item): item is NonNullable<typeof item> => item !== undefined)
@@ -29,5 +31,5 @@ export const load: PageServerLoad = async ({ params, platform }) => {
     .filter((item, index, list) => list.findIndex((candidate) => candidate.slug === item.slug) === index)
     .slice(0, 3);
 
-  return { article, related };
+  return { article, related, media };
 };
