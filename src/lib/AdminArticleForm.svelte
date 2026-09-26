@@ -37,33 +37,48 @@
   }
 
   function bodyToSections(value: string) {
-    const blocks = String(value || '')
-      .split(/\n\s*\n/)
-      .map((item) => item.trim())
-      .filter(Boolean);
-
+    const lines = String(value || '').replace(/\r\n?/g, '\n').split('\n');
     const result: { heading: string; paragraphs: string[]; bullets: string[] }[] = [];
     let current = { heading: '', paragraphs: [] as string[], bullets: [] as string[] };
+    let paragraphLines: string[] = [];
+
+    const flushParagraph = () => {
+      const paragraph = paragraphLines.join(' ').replace(/\s+/g, ' ').trim();
+      if (paragraph) current.paragraphs.push(paragraph);
+      paragraphLines = [];
+    };
 
     const pushCurrent = () => {
-      if (current.heading || current.paragraphs.length || current.bullets.length) result.push(current);
+      flushParagraph();
+      if (current.heading || current.paragraphs.length || current.bullets.length) {
+        result.push(current);
+      }
       current = { heading: '', paragraphs: [], bullets: [] };
     };
 
-    for (const block of blocks) {
-      if (/^#{2,3}\s+/.test(block)) {
-        pushCurrent();
-        current.heading = block.replace(/^#{2,3}\s+/, '').trim();
-      } else if (block.split('\n').every((line) => /^-\s+/.test(line.trim()))) {
-        current.bullets.push(
-          ...block
-            .split('\n')
-            .map((line) => line.trim().replace(/^-\s+/, '').trim())
-            .filter(Boolean)
-        );
-      } else {
-        current.paragraphs.push(block);
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+
+      if (!line) {
+        flushParagraph();
+        continue;
       }
+
+      const headingMatch = line.match(/^#{2,3}\s+(.+)$/);
+      if (headingMatch) {
+        pushCurrent();
+        current.heading = headingMatch[1].trim();
+        continue;
+      }
+
+      const bulletMatch = line.match(/^-\s+(.+)$/);
+      if (bulletMatch) {
+        flushParagraph();
+        current.bullets.push(bulletMatch[1].trim());
+        continue;
+      }
+
+      paragraphLines.push(line);
     }
 
     pushCurrent();
@@ -441,7 +456,7 @@
           <section class="body-editor">
             <div class="section-heading">
               <div><small>ARTICLE BODY</small><strong>متن کامل مقاله</strong></div>
-              <span>## تیتر سطح ۲ · ### تیتر سطح ۳ · - لیست · خط خالی بین پاراگراف‌ها</span>
+              <span>## تیتر · - لیست · **بولد** · هر تیتر را در یک خط جدا بنویس</span>
             </div>
             <textarea class="body" bind:value={body} maxlength="100000" placeholder="متن کامل مقاله را اینجا وارد کن…"></textarea>
 
