@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ cookies, platform }) => {
       summary: summary.results ?? [],
       recent: recent.results ?? [],
       profiles: (profiles.results ?? []).map((item) => {
-        let profile = {};
+        let profile: Record<string, any> = {};
         try { profile = JSON.parse(item.preferences_json || '{}'); } catch { profile = {}; }
         return { ...item, profile };
       })
