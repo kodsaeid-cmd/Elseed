@@ -5,6 +5,9 @@
 
   let { data } = $props();
   const featured = $derived(data.articles.find((article: any) => article.featured) ?? data.articles[0]);
+  const categories = $derived(
+    Array.from(new Set([...magazineCategories, ...data.articles.map((article: any) => article.category).filter(Boolean)]))
+  );
   let activeCategory = $state('همه');
   let visibleArticles = $derived(
     activeCategory === 'همه'
@@ -69,7 +72,7 @@
     </div>
 
     <div class="magazine-chips" role="group" aria-label="دسته‌بندی مطالب">
-      {#each magazineCategories as category}
+      {#each categories as category}
         <button
           type="button"
           class:active={activeCategory === category}
