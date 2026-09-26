@@ -8,32 +8,18 @@
   <meta name="robots" content="noindex,nofollow" />
 </svelte:head>
 
-<div class="admin-page">
-  <header class="admin-page-head admin-page-head-compact">
-    <div>
-      <span class="admin-kicker">CONTENT STUDIO</span>
-      <h1>{data.article.title}</h1>
-      <p dir="ltr">/magazine/{data.article.slug}</p>
-    </div>
-    <div class="admin-head-actions">
-      {#if data.article.status === 'published'}
-        <a class="admin-secondary-action" href={'/magazine/' + data.article.slug} target="_blank" rel="noreferrer">مشاهده ↗</a>
-      {/if}
-      <a class="admin-secondary-action" href="/admin/magazine">← مقالات</a>
-    </div>
-  </header>
-
+<div class="dandooni-editor-page">
   {#if form?.success}
-    <div class="admin-alert admin-alert-success">{form.message}</div>
+    <div class="admin-alert admin-alert-success editor-page-message">{form.message}</div>
   {/if}
 
   {#if form?.error}
-    <div class="admin-alert admin-alert-error">{form.error}</div>
+    <div class="admin-alert admin-alert-error editor-page-message">{form.error}</div>
   {/if}
 
   <AdminArticleForm initial={data.article} articleOptions={data.articleOptions} submitLabel="ذخیره تغییرات" />
 
-  <section class="admin-danger-zone">
+  <section class="editor-danger-zone">
     <div>
       <strong>حذف مقاله</strong>
       <p>این عملیات مقاله را از CMS حذف می‌کند. Revisionهای قبلی هم با آن حذف می‌شوند.</p>
@@ -43,3 +29,30 @@
     </form>
   </section>
 </div>
+
+<style>
+  .dandooni-editor-page{
+    width:min(1320px,calc(100% - 36px));
+    margin:0 auto;
+    padding:24px 0 44px;
+  }
+  .editor-page-message{max-width:1280px;margin:0 auto 12px}
+  .editor-danger-zone{
+    max-width:1280px;
+    margin:14px auto 0;
+    padding:14px 16px;
+    border:1px solid rgba(160,83,69,.14);
+    border-radius:16px;
+    background:#fff8f6;
+    display:flex;
+    justify-content:space-between;
+    gap:18px;
+    align-items:center;
+    color:#704d46;
+  }
+  .editor-danger-zone strong{font-size:.72rem}
+  .editor-danger-zone p{margin:3px 0 0;font-size:.58rem;color:#9a7770}
+  .editor-danger-zone button{border:1px solid rgba(160,83,69,.18);background:#fff;color:#a15143;border-radius:10px;padding:8px 11px;font:inherit;font-size:.6rem;font-weight:900}
+  :global(.admin-main:has(.dandooni-editor-page)){background:#f5f8f6}
+  @media(max-width:820px){.dandooni-editor-page{width:100%;padding:12px}.editor-danger-zone{align-items:flex-start;flex-direction:column}}
+</style>
