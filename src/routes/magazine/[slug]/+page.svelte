@@ -3,6 +3,7 @@
   import Footer from '$lib/Footer.svelte';
   import ArticleMediaGroup from '$lib/ArticleMediaGroup.svelte';
   import InlineArticleText from '$lib/InlineArticleText.svelte';
+  import ArticleProfileQuestion from '$lib/ArticleProfileQuestion.svelte';
 
   let { data } = $props();
   const article = data.article;
@@ -140,6 +141,8 @@
             <p><InlineArticleText text={article.quickAnswer} /></p>
           </section>
         {/if}
+
+        <ArticleProfileQuestion question={article.profileQuestion} source={'article:' + article.slug} />
 
         <ArticleMediaGroup items={mediaBefore} />
 
