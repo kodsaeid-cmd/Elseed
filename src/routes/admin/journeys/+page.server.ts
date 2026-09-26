@@ -31,7 +31,11 @@ export const load: PageServerLoad = async ({ cookies, platform }) => {
       profiles: (profiles.results ?? []).map((item) => {
         let profile: Record<string, any> = {};
         try { profile = JSON.parse(item.preferences_json || '{}'); } catch { profile = {}; }
-        return { ...item, profile };
+        return {
+          anonymous_id: String(item.anonymous_id ?? ''),
+          updated_at: String(item.updated_at ?? ''),
+          profile
+        };
       })
     };
   } catch {
