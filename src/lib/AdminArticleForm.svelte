@@ -138,6 +138,18 @@
     }))
   );
 
+  const initialProfileQuestion = initialContent.profileQuestion ?? {};
+  let profileQuestionEnabled = $state(Boolean(initialProfileQuestion.enabled));
+  let profileQuestionKey = $state(String(initialProfileQuestion.key ?? ''));
+  let profileQuestionTitle = $state(String(initialProfileQuestion.title ?? ''));
+  let profileQuestionDescription = $state(String(initialProfileQuestion.description ?? ''));
+  let profileQuestionOptions = $state(
+    Array.from({ length: 4 }, (_, index) => ({
+      value: String(initialProfileQuestion.options?.[index]?.value ?? ''),
+      label: String(initialProfileQuestion.options?.[index]?.label ?? '')
+    }))
+  );
+
   let relatedSlugs = $state<string[]>(
     Array.isArray(initialContent.relatedSlugs) ? initialContent.relatedSlugs : []
   );
@@ -178,6 +190,17 @@
           answer: item.answer.trim()
         }))
         .filter((item: any) => item.question && item.answer),
+      profileQuestion: profileQuestionEnabled
+        ? {
+            enabled: true,
+            key: profileQuestionKey.trim(),
+            title: profileQuestionTitle.trim(),
+            description: profileQuestionDescription.trim(),
+            options: profileQuestionOptions
+              .map((item: any) => ({ value: item.value.trim(), label: item.label.trim() }))
+              .filter((item: any) => item.value && item.label)
+          }
+        : null,
       relatedSlugs,
       internalLinks: internalLinks
         .map((item: any) => ({
@@ -854,6 +877,48 @@
             <article><small>پاسخ‌دار</small><strong>{faq.filter((item: any) => item.question.trim() && item.answer.trim()).length}</strong></article>
           </section>
 
+          <section class="profile-question-admin">
+            <header>
+              <div>
+                <small>COFFEE PROFILE Q&A</small>
+                <h3>سؤال تعاملی داخل مقاله</h3>
+                <p>یک سؤال کوتاه بساز که جوابش مستقیم به «قهوه و من» کاربر اضافه شود.</p>
+              </div>
+              <label class="profile-question-toggle">
+                <input type="checkbox" bind:checked={profileQuestionEnabled} />
+                <span>{profileQuestionEnabled ? 'فعال' : 'غیرفعال'}</span>
+              </label>
+            </header>
+
+            {#if profileQuestionEnabled}
+              <div class="profile-question-fields">
+                <label>
+                  Signal Key
+                  <input bind:value={profileQuestionKey} maxlength="80" dir="ltr" placeholder="caffeine.sleep" />
+                  <small>انگلیسی و پایدار؛ مثل caffeine.sleep یا habit.cups</small>
+                </label>
+                <label>
+                  سؤال
+                  <input bind:value={profileQuestionTitle} maxlength="260" placeholder="مثلاً: قهوه عصر روی خوابت اثر می‌ذاره؟" />
+                </label>
+                <label class="profile-question-full">
+                  توضیح کوتاه
+                  <textarea bind:value={profileQuestionDescription} maxlength="600" rows="3"></textarea>
+                </label>
+
+                <div class="profile-options-editor profile-question-full">
+                  <span>گزینه‌های پاسخ</span>
+                  {#each profileQuestionOptions as option, index}
+                    <div>
+                      <input bind:value={option.label} maxlength="120" placeholder={'عنوان گزینه ' + (index + 1)} />
+                      <input bind:value={option.value} maxlength="80" dir="ltr" placeholder="value" />
+                    </div>
+                  {/each}
+                </div>
+              </div>
+            {/if}
+          </section>
+
           {#if faq.length}
             <div class="questions-list">
               {#each faq as item, index}
@@ -955,7 +1020,8 @@
   .links-list{display:grid;gap:8px}.link-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:10px;align-items:start;border:1px solid rgba(45,103,95,.075);background:#fbfdfc;border-radius:14px;padding:10px 11px}.link-number{width:34px;height:34px;border-radius:10px;background:#edf5f2;display:grid;place-items:center;font-size:.56rem;font-weight:900;color:#557b75}.link-copy{display:grid;gap:8px}.actions button{border:1px solid rgba(45,103,95,.10);background:#fff7f4;border-radius:8px;padding:7px;color:#a45649;font:inherit;font-size:.54rem;cursor:pointer}
   .empty-state{min-height:260px;border:1px dashed rgba(45,103,95,.15);background:linear-gradient(180deg,#fbfdfc,#f7fbf9);border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#82918f;padding:28px}.empty-state>div{width:44px;height:44px;border-radius:13px;background:#eaf4f1;color:#2f746b;display:grid;place-items:center;margin-bottom:8px}.empty-state strong{font-size:.68rem;color:#466d67}.empty-state p{font-size:.56rem}
   .link-guidance{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.link-guidance>div{background:#fff;border:1px solid rgba(45,103,95,.075);border-radius:14px;padding:10px 11px;display:flex;gap:9px}.link-guidance b{width:28px;height:28px;flex:0 0 28px;border-radius:9px;background:#edf5f2;color:#3a776f;display:grid;place-items:center;font-size:.52rem}.link-guidance span{display:grid;gap:1px}.link-guidance strong{font-size:.59rem}.link-guidance small{font-size:.51rem;color:#8b9997}
-  .questions-hero{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;background:#fff;border:1px solid rgba(38,101,92,.09);border-radius:18px;padding:16px}.questions-icon{width:46px;height:46px;border-radius:14px;background:#e8f4f0;color:#2e746a;display:grid;place-items:center;font-weight:900}.questions-hero h3{margin:2px 0;font-size:.9rem}.questions-hero p{margin:0;color:#7d8f8b;font-size:.59rem}.question-add{white-space:nowrap}.questions-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.questions-kpis article{background:#fff;border:1px solid rgba(45,103,95,.08);border-radius:14px;padding:12px}.questions-kpis small{display:block;color:#81918e;font-size:.56rem}.questions-kpis strong{display:block;margin-top:3px;font-size:1.25rem;color:#235b54}.questions-list{display:grid;gap:10px}.question-card{background:#fff;border:1px solid rgba(45,103,95,.08);border-radius:16px;padding:14px;display:grid;gap:10px}.question-card header{display:flex;align-items:center;gap:8px}.question-card header span{width:30px;height:30px;border-radius:9px;background:#edf5f2;display:grid;place-items:center;font-size:.55rem}.question-card header strong{font-size:.68rem}.question-card header button{margin-right:auto;border:0;background:#fff1ed;color:#a15143;border-radius:8px;padding:6px 9px;font:inherit;font-size:.54rem}.questions-empty{min-height:300px;background:#fff;border:1px dashed rgba(45,103,95,.16);border-radius:18px;display:grid;place-items:center;text-align:center;align-content:center;padding:30px;color:#82918f}.questions-empty>div{width:48px;height:48px;border-radius:14px;background:#e8f4f0;color:#2e746a;display:grid;place-items:center;font-weight:900}.questions-empty strong{margin-top:9px;font-size:.75rem;color:#466d67}.questions-empty p{max-width:520px;margin:5px 0 13px;font-size:.59rem;line-height:1.8}.questions-empty button{border:0;background:#e4f2ee;color:#256e64;border-radius:11px;padding:9px 12px;font:inherit;font-size:.62rem;font-weight:900}
+  .questions-hero{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;background:#fff;border:1px solid rgba(38,101,92,.09);border-radius:18px;padding:16px}
+  .profile-question-admin{background:#fff;border:1px solid rgba(38,101,92,.09);border-radius:18px;padding:16px}.profile-question-admin>header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.profile-question-admin small{display:block;color:#4c897f;font-size:.54rem;font-weight:900;letter-spacing:.12em}.profile-question-admin h3{margin:3px 0;font-size:.82rem}.profile-question-admin p{margin:0;color:#81928e;font-size:.56rem;line-height:1.8}.profile-question-toggle{display:flex!important;align-items:center;gap:7px;white-space:nowrap}.profile-question-toggle input{width:auto}.profile-question-fields{margin-top:14px;padding-top:14px;border-top:1px solid rgba(38,101,92,.07);display:grid;grid-template-columns:1fr 1fr;gap:10px}.profile-question-full{grid-column:1/-1}.profile-options-editor>span{display:block;margin-bottom:6px;color:#58736d;font-size:.62rem;font-weight:800}.profile-options-editor>div{display:grid;grid-template-columns:1.5fr .7fr;gap:7px;margin-bottom:7px}.questions-icon{width:46px;height:46px;border-radius:14px;background:#e8f4f0;color:#2e746a;display:grid;place-items:center;font-weight:900}.questions-hero h3{margin:2px 0;font-size:.9rem}.questions-hero p{margin:0;color:#7d8f8b;font-size:.59rem}.question-add{white-space:nowrap}.questions-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.questions-kpis article{background:#fff;border:1px solid rgba(45,103,95,.08);border-radius:14px;padding:12px}.questions-kpis small{display:block;color:#81918e;font-size:.56rem}.questions-kpis strong{display:block;margin-top:3px;font-size:1.25rem;color:#235b54}.questions-list{display:grid;gap:10px}.question-card{background:#fff;border:1px solid rgba(45,103,95,.08);border-radius:16px;padding:14px;display:grid;gap:10px}.question-card header{display:flex;align-items:center;gap:8px}.question-card header span{width:30px;height:30px;border-radius:9px;background:#edf5f2;display:grid;place-items:center;font-size:.55rem}.question-card header strong{font-size:.68rem}.question-card header button{margin-right:auto;border:0;background:#fff1ed;color:#a15143;border-radius:8px;padding:6px 9px;font:inherit;font-size:.54rem}.questions-empty{min-height:300px;background:#fff;border:1px dashed rgba(45,103,95,.16);border-radius:18px;display:grid;place-items:center;text-align:center;align-content:center;padding:30px;color:#82918f}.questions-empty>div{width:48px;height:48px;border-radius:14px;background:#e8f4f0;color:#2e746a;display:grid;place-items:center;font-weight:900}.questions-empty strong{margin-top:9px;font-size:.75rem;color:#466d67}.questions-empty p{max-width:520px;margin:5px 0 13px;font-size:.59rem;line-height:1.8}.questions-empty button{border:0;background:#e4f2ee;color:#256e64;border-radius:11px;padding:9px 12px;font:inherit;font-size:.62rem;font-weight:900}
   .editor-footer{border-top:1px solid rgba(45,103,95,.08);padding:12px 22px;display:flex;gap:8px;align-items:center;background:#fff}.editor-footer>button{border:1px solid rgba(45,103,95,.1);background:#f8faf9;color:#51736d;border-radius:11px;padding:9px 12px;font:inherit;font-size:.64rem;font-weight:800;cursor:pointer}.editor-footer .primary{border:0;background:#176d67;color:white}.editor-footer .draft-action{background:#eef6f3;color:#286c63}.footer-spacer{flex:1}
   @media(max-width:900px){.editor{border-radius:20px}.editor-tabs{grid-template-columns:1fr 1fr}.text-grid,.featured-layout,.seo-fields-grid,.publication-grid,.publisher-card,.links-grid,.links-head{grid-template-columns:1fr}.media-gate{grid-template-columns:44px 1fr}.media-gate .primary{grid-column:1/-1}.editor-content{padding:14px}.editor-head,.editor-tabs,.editor-footer{padding-left:14px;padding-right:14px}.link-guidance{grid-template-columns:1fr}}
 </style>
