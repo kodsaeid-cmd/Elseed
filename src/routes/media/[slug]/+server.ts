@@ -35,7 +35,21 @@ const images: Record<string, string> = {
   'time-afternoon': 'https://images.unsplash.com/photo-1739423709394-db7a52c8ff40?auto=format&fit=crop&fm=jpg&q=88&w=1800',
   'time-afternoon-v2': 'https://unsplash.com/photos/_jJlPYxZzoA/download?force=true&w=1800',
   'time-afternoon-v3': 'https://images.pexels.com/photos/4921513/pexels-photo-4921513.jpeg?cs=srgb&fm=jpg&w=1800',
-  'time-night': 'https://miro.medium.com/v2/resize%3Afit%3A1600/1%2AzROom6uk75DKb2ybNEzp4w.jpeg'
+  'time-night': 'https://miro.medium.com/v2/resize%3Afit%3A1600/1%2AzROom6uk75DKb2ybNEzp4w.jpeg',
+  'effect-strong': 'https://unsplash.com/photos/3b1mi9obsgA/download?force=true&w=1400',
+  'effect-balanced': 'https://unsplash.com/photos/wlrmQa7Hli8/download?force=true&w=1400',
+  'effect-many': 'https://unsplash.com/photos/t16HUOz9fjI/download?force=true&w=1400',
+  'effect-taste': 'https://unsplash.com/photos/d7Mfj44MWWY/download?force=true&w=1400',
+  'sensitivity-none': 'https://unsplash.com/photos/jsExhShuhW0/download?force=true&w=1400',
+  'sensitivity-some': 'https://unsplash.com/photos/bu5LEzvtAKY/download?force=true&w=1400',
+  'sensitivity-high': 'https://unsplash.com/photos/R1c8MDVkSzM/download?force=true&w=1400',
+  'sensitivity-sleep': 'https://unsplash.com/photos/0qFoQqoBMSE/download?force=true&w=1400',
+  'brew-espresso': 'https://unsplash.com/photos/4CPqHqOJaC4/download?force=true&w=1400',
+  'brew-moka': 'https://unsplash.com/photos/SeOeOnhlehM/download?force=true&w=1400',
+  'brew-v60': 'https://unsplash.com/photos/Na9Nf29-tYU/download?force=true&w=1400',
+  'brew-french': 'https://unsplash.com/photos/wjTVOq5JTIU/download?force=true&w=1400',
+  'brew-filter': 'https://unsplash.com/photos/4SbIieFtx74/download?force=true&w=1400',
+  'brew-unsure': 'https://unsplash.com/photos/mgvCv7Ht5hw/download?force=true&w=1400'
 };
 
 function imageResponse(base64: string) {
