@@ -217,6 +217,32 @@ export const POST: RequestHandler = async ({ request, cookies, platform }) => {
         .run();
 
       if (result.success === false) throw new Error(result.error || 'اتصال رسانه به مقاله انجام نشد.');
+
+      // If the article has no featured image yet, automatically use the first attached image.
+      // Editors can always replace it later from the Featured Image controls.
+      if (media.media_type === 'image') {
+        try {
+          const current = await auth.db
+            .prepare('SELECT cover_image FROM cms_articles WHERE id=? LIMIT 1')
+            .bind(articleId)
+            .first<{ cover_image: string }>();
+
+          if (!current?.cover_image?.trim()) {
+            const fallbackAlt = clean(body?.alt, 500) || media.alt_text || media.name;
+            await auth.db
+              .prepare(
+                `UPDATE cms_articles
+                 SET cover_image=?, cover_alt=?, updated_at=datetime('now')
+                 WHERE id=? AND (cover_image IS NULL OR TRIM(cover_image)='')`
+              )
+              .bind(media.url, fallbackAlt, articleId)
+              .run();
+          }
+        } catch {
+          // Inline media attachment must still succeed even if automatic cover promotion fails.
+        }
+      }
+
       return json({ ok: true, placements: await listArticleMedia(auth.db, articleId) });
     }
 
