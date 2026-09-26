@@ -3,7 +3,7 @@
     { href: '/shop', label: 'فروشگاه' },
     { href: '/magazine', label: 'مجله' },
     { href: '/find', label: 'قهوهم را پیدا کن' },
-    { href: '/fix', label: 'قهوهم را درست کن' }
+    { href: '/fix', label: 'قهوه‌ات خراب میشه؟' }
   ];
 </script>
 
