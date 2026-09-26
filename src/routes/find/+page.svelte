@@ -146,6 +146,7 @@
           profile: {
             time: complete.time,
             effect: complete.effect,
+            sensitivity: complete.sensitivity,
             taste: complete.taste,
             brew: complete.brew,
             line: match.line,
