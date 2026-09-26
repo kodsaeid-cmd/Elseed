@@ -57,7 +57,7 @@
     error = '';
 
     try {
-      const data = await request('/api/admin-media?articleId=' + encodeURIComponent(articleId));
+      const data = await request('/admin/api/media?articleId=' + encodeURIComponent(articleId));
       assets = data.assets ?? [];
       placements = data.placements ?? [];
       directUploadEnabled = Boolean(data.directUploadEnabled);
@@ -85,7 +85,7 @@
   }
 
   async function attachAsset(mediaId: string, position: number, sortOrder: number, alt = '', caption = '') {
-    return request('/api/admin-media', {
+    return request('/admin/api/media', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
@@ -119,7 +119,7 @@
         fd.set('file', file);
         fd.set('alt', placementAlt || file.name.replace(/\.[^.]+$/, ''));
 
-        const uploaded = await request('/api/admin-media', {
+        const uploaded = await request('/admin/api/media', {
           method: 'POST',
           body: fd
         });
@@ -161,7 +161,7 @@
     notice = '';
 
     try {
-      const created = await request('/api/admin-media', {
+      const created = await request('/admin/api/media', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -227,7 +227,7 @@
     error = '';
 
     try {
-      const data = await request('/api/admin-article-media', {
+      const data = await request('/admin/api/article-media', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -252,7 +252,7 @@
     if (!confirm('این رسانه از مقاله حذف شود؟ فایل اصلی در کتابخانه باقی می‌ماند.')) return;
 
     try {
-      await request('/api/admin-media', {
+      await request('/admin/api/media', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -273,7 +273,7 @@
     error = '';
 
     try {
-      const data = await request('/api/admin-media', {
+      const data = await request('/admin/api/media', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
