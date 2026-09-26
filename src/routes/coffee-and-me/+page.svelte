@@ -175,6 +175,8 @@
   const completedSignals = $derived(Object.keys(signals).length);
   const profileProgress = $derived(Math.min(100, Math.round(((completedSignals + (prefs.line ? 2 : 0) + (profile?.latestFix ? 1 : 0)) / 6) * 100)));
 
+  const currentMeQuestion = $derived(questions[activeQuestion]);
+
   const recommendations = $derived([
     signals['caffeine.sleep']?.value === 'yes'
       ? { title: 'کافئین چقدر در بدن می‌ماند؟', href: '/magazine/caffeine-and-sleep', meta: 'برای الگوی خواب تو' }
@@ -277,21 +279,20 @@
           <p>هر جواب بلافاصله به «قهوه و من» اضافه می‌شه و بعداً مقاله‌ها هم می‌تونن ازش استفاده کنن.</p>
         </div>
 
-        {@const question = questions[activeQuestion]}
         <article class="me-question">
           <div class="question-copy">
-            <span>{question.eyebrow}</span>
-            <h3>{question.title}</h3>
-            <p>{question.description}</p>
+            <span>{currentMeQuestion.eyebrow}</span>
+            <h3>{currentMeQuestion.title}</h3>
+            <p>{currentMeQuestion.description}</p>
           </div>
 
           <div class="me-options">
-            {#each question.options as option}
+            {#each currentMeQuestion.options as option}
               <button
                 type="button"
-                class:selected={signals[question.key]?.value === option.value}
-                disabled={savingKey === question.key}
-                onclick={() => answer(question, option)}
+                class:selected={signals[currentMeQuestion.key]?.value === option.value}
+                disabled={savingKey === currentMeQuestion.key}
+                onclick={() => answer(currentMeQuestion, option)}
               >
                 <strong>{option.label}</strong>
                 <small>{option.note}</small>
