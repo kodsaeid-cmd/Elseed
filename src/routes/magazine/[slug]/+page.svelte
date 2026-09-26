@@ -27,10 +27,14 @@
 </script>
 
 <svelte:head>
-  <title>{article.title} | مجله EL.SEED</title>
-  <meta name="description" content={article.excerpt} />
-  <meta property="og:title" content={article.title} />
-  <meta property="og:description" content={article.excerpt} />
+  <title>{article.seo?.metaTitle || article.title + ' | مجله EL.SEED'}</title>
+  <meta name="description" content={article.seo?.metaDescription || article.excerpt} />
+  <meta name="robots" content={article.seo?.robots || 'index,follow'} />
+  {#if article.seo?.canonicalUrl}
+    <link rel="canonical" href={article.seo.canonicalUrl.startsWith('http') ? article.seo.canonicalUrl : 'https://elseed.ir' + article.seo.canonicalUrl} />
+  {/if}
+  <meta property="og:title" content={article.seo?.metaTitle || article.title} />
+  <meta property="og:description" content={article.seo?.metaDescription || article.excerpt} />
   <meta property="og:type" content="article" />
   <meta property="og:image" content={article.image} />
   <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
