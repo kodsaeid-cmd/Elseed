@@ -146,7 +146,13 @@
             class="fix-option"
             onclick={() => selectOption(currentQuestion.key, option.value)}
           >
-            <span class="fix-option-icon" aria-hidden="true">{option.icon}</span>
+            {#if option.image}
+              <span class="fix-option-photo" aria-hidden="true">
+                <img src={option.image} alt="" loading="lazy" />
+              </span>
+            {:else}
+              <span class="fix-option-icon" aria-hidden="true">{option.icon}</span>
+            {/if}
             <strong>{option.title}</strong>
             <small>{option.description}</small>
             <i aria-hidden="true">←</i>
@@ -248,10 +254,13 @@
   .fix-context{margin:22px auto 0;display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
   .fix-context span{padding:7px 11px;border-radius:999px;background:#efe3d4;color:#7a5a4d;font-size:.72rem}.fix-context b{color:#b36f34}
   .fix-options{margin:44px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-  .fix-option{min-height:190px;padding:18px;border:1px solid rgba(66,38,29,.1);border-radius:22px;background:rgba(255,255,255,.66);color:#42261d;text-align:right;display:grid;grid-template-rows:auto auto 1fr auto;gap:8px;cursor:pointer;font:inherit;transition:.2s ease;box-shadow:0 10px 30px rgba(66,38,29,.025)}
-  .fix-option:hover,.fix-option.selected{transform:translateY(-4px);border-color:rgba(209,131,63,.42);box-shadow:0 18px 38px rgba(66,38,29,.07)}
-  .fix-option-icon{width:44px;height:44px;border-radius:14px;background:#f1e3d4;color:#a76029;display:grid;place-items:center;font-size:1rem;font-weight:900}
-  .fix-option strong{font-size:1.04rem;line-height:1.6}.fix-option small{color:#8a756c;font-size:.72rem;line-height:1.8}.fix-option i{font-style:normal;color:#c27a3a}
+  .fix-option{position:relative;min-height:310px;padding:24px 20px 20px;border:1px solid rgba(66,38,29,.1);border-radius:22px;background:rgba(255,255,255,.66);color:#42261d;text-align:right;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer;font:inherit;transition:.2s ease;box-shadow:0 10px 30px rgba(66,38,29,.025);overflow:hidden}
+  .fix-option:hover,.fix-option.selected{transform:translateY(-4px);border-color:rgba(209,131,63,.42);background:rgba(255,252,247,.94);box-shadow:0 18px 38px rgba(66,38,29,.07)}
+  .fix-option-photo{width:136px;height:136px;border-radius:50%;overflow:hidden;margin-bottom:24px;border:1px solid rgba(111,78,55,.14);box-shadow:0 12px 30px rgba(62,39,32,.13);flex:0 0 auto;background:#eadbcb}
+  .fix-option-photo img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;filter:saturate(.92) contrast(.98) brightness(1.01);transition:transform .3s ease}
+  .fix-option:hover .fix-option-photo img{transform:scale(1.06)}
+  .fix-option-icon{width:48px;height:48px;border-radius:50%;background:#f1e3d4;color:#a76029;display:grid;place-items:center;font-size:1rem;font-weight:900;margin-bottom:24px}
+  .fix-option strong{font-size:1.04rem;line-height:1.6}.fix-option small{margin-top:8px;color:#8a756c;font-size:.72rem;line-height:1.8;padding-bottom:26px}.fix-option i{position:absolute;left:20px;bottom:16px;font-style:normal;color:#c27a3a;transition:transform .2s ease}.fix-option:hover i{transform:translateX(-4px)}
   .fix-bottom{margin-top:26px;padding-top:18px;border-top:1px solid rgba(66,38,29,.08);display:flex;justify-content:space-between;align-items:center;gap:18px;color:#9b877f;font-size:.68rem}
   .fix-bottom button{border:0;background:transparent;color:#6d5147;font:inherit;font-weight:800;cursor:pointer}
   .diagnosis-shell{padding-top:34px}
@@ -271,5 +280,5 @@
   .diagnosis-followup{padding:26px;border-radius:22px;background:#efe2d4;border:0}.diagnosis-followup.success{background:#e8efe7;color:#36543d}.diagnosis-followup p{margin:8px 0 0;color:#806c63;font-size:.8rem;line-height:1.9}
   .diagnosis-actions{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:12px}.diagnosis-actions button,.diagnosis-actions a{min-height:44px;padding:0 16px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:.75rem;font-weight:900}.diagnosis-actions button{border:1px solid rgba(66,38,29,.16);background:transparent;color:#42261d;cursor:pointer}.diagnosis-actions a{background:#42261d;color:#fff}
   @media(max-width:900px){.fix-options{grid-template-columns:repeat(2,minmax(0,1fr))}.diagnosis-hero,.diagnosis-grid{grid-template-columns:1fr}.diagnosis-confidence{max-width:300px}.diagnosis-guardrail{grid-template-columns:1fr}}
-  @media(max-width:560px){.fix-page{padding-top:18px}.fix-progress{margin-bottom:38px}.fix-intro h1{font-size:2.25rem}.fix-options{grid-template-columns:1fr}.fix-option{min-height:145px}.fix-bottom,.diagnosis-feedback,.diagnosis-actions{align-items:flex-start;flex-direction:column}.diagnosis-feedback>div:last-child{width:100%;flex-direction:column}.diagnosis-feedback button{width:100%}.diagnosis-main,.diagnosis-why{padding:20px}}
+  @media(max-width:560px){.fix-page{padding-top:18px}.fix-progress{margin-bottom:38px}.fix-intro h1{font-size:2.25rem}.fix-options{grid-template-columns:1fr}.fix-option{min-height:220px;display:grid;grid-template-columns:108px minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:16px;padding:16px}.fix-option-photo{grid-row:1/4;width:108px;height:108px;margin:0}.fix-option strong{align-self:end}.fix-option small{padding-bottom:20px}.fix-option i{left:16px;bottom:14px}.fix-bottom,.diagnosis-feedback,.diagnosis-actions{align-items:flex-start;flex-direction:column}.diagnosis-feedback>div:last-child{width:100%;flex-direction:column}.diagnosis-feedback button{width:100%}.diagnosis-main,.diagnosis-why{padding:20px}}
 </style>
