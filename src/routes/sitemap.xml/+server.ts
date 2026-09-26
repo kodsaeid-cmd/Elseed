@@ -1,9 +1,10 @@
 import type { RequestHandler } from './$types';
-import { magazineArticles } from '$lib/magazine';
+import { getPublishedArticles } from '$lib/server/cms';
 
 const origin = 'https://elseed.ir';
 
-export const GET: RequestHandler = () => {
+export const GET: RequestHandler = async ({ platform }) => {
+  const magazineArticles = await getPublishedArticles(platform?.env?.DB);
   const staticPages = [
     { path: '/', changefreq: 'weekly', priority: '1.0' },
     { path: '/find', changefreq: 'monthly', priority: '0.9' },
