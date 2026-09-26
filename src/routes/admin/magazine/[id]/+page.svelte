@@ -15,10 +15,6 @@
     </div>
   {/if}
 
-  {#if form?.success}
-    <div class="admin-alert admin-alert-success editor-page-message">{form.message}</div>
-  {/if}
-
   {#if form?.error}
     <div class="admin-alert admin-alert-error editor-page-message">{form.error}</div>
   {/if}
