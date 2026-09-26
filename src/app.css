@@ -2986,3 +2986,103 @@ main { overflow: clip; }
   .admin-media-grid { grid-template-columns: 1fr; }
   .admin-danger-zone { align-items: flex-start; flex-direction: column; }
 }
+
+
+/* Magazine CMS — FAQ, related content and internal linking */
+.admin-editor-empty {
+  padding: 16px;
+  border: 1px dashed rgba(62,39,32,.14);
+  border-radius: 12px;
+  color: rgba(62,39,32,.43);
+  font-size: 10px;
+  text-align: center;
+}
+
+.admin-related-picker {
+  max-height: 310px;
+  margin: 14px 18px 18px;
+  overflow: auto;
+  display: grid;
+  gap: 6px;
+}
+.admin-related-picker label {
+  min-height: 40px;
+  padding: 8px 9px;
+  border: 1px solid rgba(62,39,32,.10);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,252,247,.65);
+  cursor: pointer;
+}
+.admin-related-picker input { accent-color: #3e2720; }
+.admin-related-picker span { font-size: 9.5px; line-height: 1.5; }
+.admin-related-picker p { color: rgba(62,39,32,.45); font-size: 9.5px; }
+
+.article-inline-links {
+  margin: 42px 0;
+  padding: 20px 22px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.article-inline-links > span {
+  display: block;
+  margin-bottom: 12px;
+  color: rgba(62,39,32,.45);
+  font-size: 10px;
+  font-weight: 800;
+}
+.article-inline-links > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.article-inline-links a {
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--espresso);
+  font-size: 10.5px;
+  font-weight: 700;
+  background: rgba(255,255,255,.46);
+}
+.article-inline-links i { font-style: normal; color: var(--caramel); }
+
+.article-faq {
+  margin: 48px 0 42px;
+}
+.article-faq h2 {
+  margin: 7px 0 18px;
+  font-size: 28px;
+}
+.article-faq > div {
+  border-top: 1px solid var(--line);
+}
+.article-faq details {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+.article-faq summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 800;
+}
+.article-faq summary::-webkit-details-marker { display: none; }
+.article-faq summary::after {
+  content: '+';
+  float: left;
+  color: var(--caramel);
+}
+.article-faq details[open] summary::after { content: '−'; }
+.article-faq p {
+  margin: 12px 0 0;
+  color: rgba(62,39,32,.68);
+  line-height: 2;
+  font-size: 13.5px;
+}
