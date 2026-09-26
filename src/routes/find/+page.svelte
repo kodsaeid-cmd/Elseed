@@ -25,7 +25,7 @@
       title: 'معمولاً کی قهوه می‌خوری؟',
       subtitle: 'فقط چیزی که بیشتر شبیه زندگی واقعی توئه را انتخاب کن.',
       options: [
-        { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/media/time-morning' },
+        { value: 'morning', title: 'صبح زود', description: 'برای شروع جدی روز', icon: '☀️', image: '/media/time-morning-human-v2' },
         { value: 'day', title: 'صبح و وسط روز', description: 'همراه کار و تمرکز', icon: '◐', image: '/media/time-day-v2' },
         { value: 'afternoon', title: 'عصر', description: 'هنوز قهوه می‌خوام، ولی سبک‌تر', icon: '🌤', image: '/media/time-afternoon-v4' },
         { value: 'night', title: 'شب', description: 'بیشتر برای حال و مزه', icon: '☾', image: '/media/time-night' }
@@ -37,10 +37,10 @@
       title: 'قهوه قراره برات چیکار کنه؟',
       subtitle: 'نه اصطلاح تخصصی؛ فقط نقشی که می‌خوای فنجانت برات بازی کنه.',
       options: [
-        { value: 'strong', title: 'منو راه بندازه', description: 'یه شروع قوی و انرژی واضح می‌خوام', icon: '⚡', image: '/media/effect-strong' },
-        { value: 'balanced', title: 'کمکم کنه تمرکز کنم', description: 'انرژی متعادل برای کار و تمرکز', icon: '↗', image: '/media/effect-balanced' },
-        { value: 'many', title: 'بتونم چند فنجان بخورم', description: 'می‌خوام جا برای فنجان بعدی هم باشه', icon: '∞', image: '/media/effect-many' },
-        { value: 'taste', title: 'فقط خود قهوه رو می‌خوام', description: 'بیشتر برای مزه و حس خوبش', icon: '♡', image: '/media/effect-taste' }
+        { value: 'strong', title: 'منو راه بندازه', description: 'یه شروع قوی و انرژی واضح می‌خوام', icon: '⚡', image: '/media/effect-strong-human-v2' },
+        { value: 'balanced', title: 'کمکم کنه تمرکز کنم', description: 'انرژی متعادل برای کار و تمرکز', icon: '↗', image: '/media/effect-balanced-human-v2' },
+        { value: 'many', title: 'بتونم چند فنجان بخورم', description: 'می‌خوام جا برای فنجان بعدی هم باشه', icon: '∞', image: '/media/effect-many-human-v2' },
+        { value: 'taste', title: 'فقط خود قهوه رو می‌خوام', description: 'بیشتر برای مزه و حس خوبش', icon: '♡', image: '/media/effect-taste-human-v2' }
       ]
     },
     {
@@ -49,10 +49,10 @@
       title: 'کافئین باهات چطوره؟',
       subtitle: 'این جواب فقط برای انتخاب شدت مناسب استفاده می‌شود.',
       options: [
-        { value: 'none', title: 'هیچ مشکلی ندارم', description: 'قهوه معمولاً اذیتم نمی‌کنه', icon: '●', image: '/media/sensitivity-none' },
-        { value: 'some', title: 'گاهی زیادی می‌شه', description: 'بعضی قهوه‌ها برام سنگین‌اند', icon: '◒', image: '/media/sensitivity-some' },
-        { value: 'high', title: 'بهش حساسم', description: 'ترجیح می‌دم ملایم‌تر باشه', icon: '○', image: '/media/sensitivity-high' },
-        { value: 'sleep', title: 'روی خوابم اثر می‌ذاره', description: 'خصوصاً اگر دیرتر بخورم', icon: '☾', image: '/media/sensitivity-sleep' }
+        { value: 'none', title: 'هیچ مشکلی ندارم', description: 'قهوه معمولاً اذیتم نمی‌کنه', icon: '●', image: '/media/sensitivity-none-human-v2' },
+        { value: 'some', title: 'گاهی زیادی می‌شه', description: 'بعضی قهوه‌ها برام سنگین‌اند', icon: '◒', image: '/media/sensitivity-some-human-v2' },
+        { value: 'high', title: 'بهش حساسم', description: 'ترجیح می‌دم ملایم‌تر باشه', icon: '○', image: '/media/sensitivity-high-human-v2' },
+        { value: 'sleep', title: 'روی خوابم اثر می‌ذاره', description: 'خصوصاً اگر دیرتر بخورم', icon: '☾', image: '/media/sensitivity-sleep-human-v2' }
       ]
     },
     {
@@ -74,12 +74,12 @@
       title: 'معمولاً چجوری درستش می‌کنی؟',
       subtitle: 'روش دم‌آوری کمک می‌کنه رُست و نسخه مناسب‌تری برات انتخاب کنیم.',
       options: [
-        { value: 'espresso', title: 'اسپرسوساز', description: 'خانگی یا نیمه‌صنعتی', icon: '▣', image: '/media/brew-espresso' },
-        { value: 'moka', title: 'موکاپات', description: 'غلیظ و کلاسیک', icon: '♨', image: '/media/brew-moka' },
-        { value: 'v60', title: 'V60 / پوراور', description: 'تمیز و شفاف', icon: '▽', image: '/media/brew-v60' },
-        { value: 'french', title: 'فرنچ‌پرس', description: 'پرتر و راحت', icon: '▤', image: '/media/brew-french' },
-        { value: 'filter', title: 'قهوه‌ساز فیلتری', description: 'برای فنجان‌های روزانه', icon: '⌁', image: '/media/brew-filter' },
-        { value: 'unsure', title: 'هنوز نمی‌دونم', description: 'نسخه عمومی بده', icon: '?', image: '/media/brew-unsure' }
+        { value: 'espresso', title: 'اسپرسوساز', description: 'خانگی یا نیمه‌صنعتی', icon: '▣', image: '/media/brew-espresso-human-v2' },
+        { value: 'moka', title: 'موکاپات', description: 'غلیظ و کلاسیک', icon: '♨', image: '/media/brew-moka-human-v2' },
+        { value: 'v60', title: 'V60 / پوراور', description: 'تمیز و شفاف', icon: '▽', image: '/media/brew-v60-human-v2' },
+        { value: 'french', title: 'فرنچ‌پرس', description: 'پرتر و راحت', icon: '▤', image: '/media/brew-french-human-v2' },
+        { value: 'filter', title: 'قهوه‌ساز فیلتری', description: 'برای فنجان‌های روزانه', icon: '⌁', image: '/media/brew-filter-human-v2' },
+        { value: 'unsure', title: 'هنوز نمی‌دونم', description: 'نسخه عمومی بده', icon: '?', image: '/media/brew-unsure-human-v2' }
       ]
     }
   ];
