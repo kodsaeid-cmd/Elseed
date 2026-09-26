@@ -11,14 +11,22 @@ export const load: PageServerLoad = async ({ params, platform }) => {
   }
 
   const articles = await getPublishedArticles(db);
-  const related = [
+  const preferred = (article.relatedSlugs ?? [])
+    .map((slug) => articles.find((item) => item.slug === slug))
+    .filter((item): item is NonNullable<typeof item> => Boolean(item) && item.slug !== article.slug);
+
+  const fallback = [
     ...articles.filter(
       (item) => item.slug !== article.slug && item.category === article.category
     ),
     ...articles.filter(
       (item) => item.slug !== article.slug && item.category !== article.category
     )
-  ].slice(0, 3);
+  ];
+
+  const related = [...preferred, ...fallback]
+    .filter((item, index, list) => list.findIndex((candidate) => candidate.slug === item.slug) === index)
+    .slice(0, 3);
 
   return { article, related };
 };
