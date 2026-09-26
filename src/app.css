@@ -276,16 +276,23 @@ main { overflow: clip; }
   padding-block: 18px;
 }
 .journey-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
   background: rgba(255,255,255,.5);
   border: 1px solid var(--line);
   border-radius: 18px;
   overflow: hidden;
-  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  cursor: pointer;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease;
 }
-.journey-card:hover {
+.journey-card:hover,
+.journey-card:focus-visible {
   transform: translateY(-4px);
   box-shadow: var(--shadow);
   border-color: rgba(198,134,66,.32);
+  background: rgba(255,255,255,.72);
+  outline: none;
 }
 .journey-image {
   height: 128px;
@@ -336,16 +343,24 @@ main { overflow: clip; }
   line-height: 1.75;
   font-size: 13.5px;
 }
-.journey-body a {
-  margin-top: 14px;
+.journey-cta {
+  margin-top: 16px;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  font-weight: 700;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(198,134,66,.10);
+  color: var(--espresso);
+  font-size: 13px;
+  font-weight: 800;
+  transition: background .2s ease, color .2s ease;
 }
-.journey-body a span { transition: transform .2s ease; }
-.journey-body a:hover span { transform: translateX(-4px); }
+.journey-card:hover .journey-cta,
+.journey-card:focus-visible .journey-cta {
+  background: var(--espresso);
+  color: white;
+}
 
 .philosophy {
   margin-top: 4px;
