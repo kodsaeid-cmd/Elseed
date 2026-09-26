@@ -3,11 +3,7 @@
 
   const nav = [
     { href: '/admin', label: 'داشبورد', icon: '⌂' },
-    { href: '/admin/magazine', label: 'مجله', icon: '✎' },
-    { href: '/admin/seo', label: 'SEO', icon: '⌕' },
-    { href: '/admin/journeys', label: 'Journeyها', icon: '↳' },
-    { href: '/admin/newsletter', label: 'خبرنامه', icon: '✉' },
-    { href: '/admin/media', label: 'مدیا', icon: '▧' },
+    { href: '/admin/content', label: 'محتوا و رشد', icon: '◫' },
     { href: '/admin/shop', label: 'فروشگاه', icon: '▣' },
     { href: '/admin/settings', label: 'تنظیمات', icon: '⚙' }
   ];
