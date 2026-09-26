@@ -51,6 +51,7 @@ const images: Record<string, string> = {
   'brew-filter': 'https://unsplash.com/photos/4SbIieFtx74/download?force=true&w=1400',
   'brew-unsure': 'https://unsplash.com/photos/mgvCv7Ht5hw/download?force=true&w=1400',
   'time-morning-human-v2': 'https://images.pexels.com/photos/18287651/pexels-photo-18287651.jpeg?auto=compress&cs=tinysrgb&w=1600',
+  'time-morning-v5': 'https://images.pexels.com/photos/9928254/pexels-photo-9928254.jpeg?auto=compress&cs=tinysrgb&w=1600',
   'effect-strong-human-v2': 'https://images.pexels.com/photos/15356224/pexels-photo-15356224.jpeg?auto=compress&cs=tinysrgb&w=1400',
   'effect-balanced-human-v2': 'https://images.pexels.com/photos/3184647/pexels-photo-3184647.jpeg?auto=compress&cs=tinysrgb&w=1400',
   'effect-many-human-v2': 'https://images.pexels.com/photos/1595390/pexels-photo-1595390.jpeg?auto=compress&cs=tinysrgb&w=1400',
