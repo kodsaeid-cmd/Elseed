@@ -49,7 +49,7 @@
     <div class="admin-panel-head"><div><span>COFFEE PROFILE</span><h2>آخرین پروفایل‌ها</h2></div></div>
     <div class="admin-table-wrap">
       <table class="admin-table">
-        <thead><tr><th>Line</th><th>Time</th><th>Effect</th><th>Taste</th><th>Brew</th><th>آخرین تغییر</th></tr></thead>
+        <thead><tr><th>Line</th><th>Time</th><th>Effect</th><th>Taste</th><th>Brew</th><th>Signals</th><th>آخرین تغییر</th></tr></thead>
         <tbody>
           {#each data.profiles as item}
             <tr>
@@ -58,10 +58,11 @@
               <td>{item.profile.effect || '—'}</td>
               <td>{item.profile.taste || '—'}</td>
               <td>{item.profile.brew || '—'}</td>
+              <td><strong>{item.signalCount}</strong></td>
               <td><small dir="ltr">{item.updated_at}</small></td>
             </tr>
           {:else}
-            <tr><td colspan="6" class="admin-empty">هنوز پروفایلی ثبت نشده است.</td></tr>
+            <tr><td colspan="7" class="admin-empty">هنوز پروفایلی ثبت نشده است.</td></tr>
           {/each}
         </tbody>
       </table>
