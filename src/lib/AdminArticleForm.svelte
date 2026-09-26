@@ -400,7 +400,7 @@
       </div>
 
       <div class="admin-related-picker">
-        {#each articleOptions.filter((option) => option.slug !== initial.slug) as option}
+        {#each articleOptions.filter((option: { id: string; slug: string; title: string }) => option.slug !== initial.slug) as option}
           <label>
             <input type="checkbox" value={option.slug} bind:group={relatedSlugs} />
             <span>{option.title}</span>
