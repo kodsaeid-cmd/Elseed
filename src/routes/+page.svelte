@@ -117,10 +117,7 @@
         با راهنمایی‌های کاربردی، تجربه‌های ساده و قهوه‌ای که برای زندگی واقعی انتخاب شده،
         بدون پیچیدگی به فنجان بهتری برس.
       </p>
-      <a class="primary-button" href="#journeys">
-        مسیر را شروع کن
-        <span aria-hidden="true">←</span>
-      </a>
+      <a class="primary-button" href="#journeys">مسیر را شروع کن</a>
       <div class="hero-side-copy" aria-hidden="true">
         <span>روزهای<br />بهتر<br />با یک فنجان<br />قهوه</span>
         <i></i>
@@ -131,7 +128,7 @@
 
   <section class="journeys shell" id="journeys" aria-label="مسیرهای EL.SEED">
     {#each journeys as journey}
-      <article class="journey-card">
+      <a class="journey-card" href={journey.href} aria-label={journey.title}>
         <div class="journey-image">
           <img src={journey.image} alt="" />
           <div class="journey-icon" aria-hidden="true">
@@ -147,9 +144,9 @@
         <div class="journey-body">
           <h2>{journey.title}</h2>
           <p>{journey.text}</p>
-          <a href={journey.href}>{journey.cta}<span aria-hidden="true">←</span></a>
+          <div class="journey-cta">{journey.cta}</div>
         </div>
-      </article>
+      </a>
     {/each}
   </section>
 
@@ -166,7 +163,7 @@
         اول کمک می‌کنیم بفهمی چه چیزی برای تو جواب می‌دهد و فقط وقتی محصول واقعاً بخشی از راه‌حل باشد،
         قهوه مناسب را پیشنهاد می‌دهیم.
       </p>
-      <a class="text-link" href="/about">درباره ما <span aria-hidden="true">←</span></a>
+      <a class="text-link" href="/about">درباره ما</a>
     </div>
     <aside class="philosophy-mark" aria-hidden="true">
       <svg viewBox="0 0 48 48"><path d="M24 39V18"></path><path d="M24 24c-9 0-14-5-14-14 9 0 14 5 14 14Z"></path><path d="M24 31c9 0 14-5 14-14-9 0-14 5-14 14Z"></path></svg>
@@ -176,7 +173,7 @@
 
   <section class="magazine shell" aria-labelledby="magazine-title">
     <div class="section-heading">
-      <a class="section-heading-link" href="/magazine">مشاهده همه مقالات <span aria-hidden="true">←</span></a>
+      <a class="section-heading-link" href="/magazine">مشاهده همه مقالات</a>
       <div class="section-title-wrap">
         <span></span>
         <h2 id="magazine-title">از مجله <b>EL.SEED</b></h2>
