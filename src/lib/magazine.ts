@@ -25,6 +25,13 @@ export type MagazineArticle = {
   faq?: { question: string; answer: string }[];
   relatedSlugs?: string[];
   internalLinks?: { label: string; href: string }[];
+  profileQuestion?: {
+    enabled?: boolean;
+    key?: string;
+    title?: string;
+    description?: string;
+    options?: { value: string; label: string }[];
+  };
   cta?: {
     label: string;
     href: string;
