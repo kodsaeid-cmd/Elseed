@@ -2,6 +2,7 @@
   import Header from '$lib/Header.svelte';
   import Footer from '$lib/Footer.svelte';
   import ArticleMediaGroup from '$lib/ArticleMediaGroup.svelte';
+  import InlineArticleText from '$lib/InlineArticleText.svelte';
 
   let { data } = $props();
   const article = data.article;
@@ -9,17 +10,38 @@
   const media = data.media ?? [];
 
   const mediaBefore = media.filter((item: any) => Number(item.after_paragraph || 0) === 0);
+
+  function normalizeSection(section: any) {
+    const rawHeading = String(section?.heading ?? '').replace(/\r\n?/g, '\n').trim();
+    const headingLines = rawHeading.split('\n').map((line) => line.trim()).filter(Boolean);
+    const heading = headingLines[0] ?? '';
+    const leakedParagraph = headingLines.slice(1).join(' ').trim();
+
+    return {
+      ...section,
+      heading,
+      paragraphs: [
+        ...(leakedParagraph ? [leakedParagraph] : []),
+        ...((section?.paragraphs ?? []).map((item: unknown) => String(item ?? '').trim()).filter(Boolean))
+      ],
+      bullets: (section?.bullets ?? []).map((item: unknown) => String(item ?? '').trim()).filter(Boolean)
+    };
+  }
+
   let paragraphIndex = 0;
-  const sectionsWithMedia = article.sections.map((section: any) => ({
-    ...section,
-    paragraphs: (section.paragraphs ?? []).map((paragraph: string) => {
-      paragraphIndex += 1;
-      return {
-        text: paragraph,
-        media: media.filter((item: any) => Number(item.after_paragraph || 0) === paragraphIndex)
-      };
-    })
-  }));
+  const sectionsWithMedia = article.sections.map((rawSection: any) => {
+    const section = normalizeSection(rawSection);
+    return {
+      ...section,
+      paragraphs: section.paragraphs.map((paragraph: string) => {
+        paragraphIndex += 1;
+        return {
+          text: paragraph,
+          media: media.filter((item: any) => Number(item.after_paragraph || 0) === paragraphIndex)
+        };
+      })
+    };
+  });
 
   const faqSchema = article.faq?.length
     ? {
@@ -115,7 +137,7 @@
         {#if article.quickAnswer}
           <section class="article-quick-answer">
             <span>جواب کوتاه</span>
-            <p>{article.quickAnswer}</p>
+            <p><InlineArticleText text={article.quickAnswer} /></p>
           </section>
         {/if}
 
@@ -123,15 +145,17 @@
 
         {#each sectionsWithMedia as section}
           <section class="article-section">
-            <h2>{section.heading}</h2>
+            {#if section.heading}
+              <h2><InlineArticleText text={section.heading} /></h2>
+            {/if}
             {#each section.paragraphs as paragraph}
-              <p>{paragraph.text}</p>
+              <p><InlineArticleText text={paragraph.text} /></p>
               <ArticleMediaGroup items={paragraph.media} />
             {/each}
             {#if section.bullets}
               <ul>
                 {#each section.bullets as item}
-                  <li>{item}</li>
+                  <li><InlineArticleText text={item} /></li>
                 {/each}
               </ul>
             {/if}
@@ -166,7 +190,7 @@
 
         <section class="article-takeaway">
           <span>اگر فقط یک چیز یادت بماند</span>
-          <p>{article.takeaway}</p>
+          <p><InlineArticleText text={article.takeaway} /></p>
         </section>
 
         {#if article.cta}
