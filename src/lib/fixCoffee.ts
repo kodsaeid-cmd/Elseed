@@ -36,6 +36,7 @@ export type FixOption = {
   title: string;
   description: string;
   icon: string;
+  image?: string;
 };
 
 export type FixQuestion = {
@@ -61,6 +62,17 @@ export type FixDiagnosis = {
   relatedLabel: string;
 };
 
+const brewImages: Record<FixBrew, string> = {
+  espresso: '/media/brew-espresso-human-v2',
+  moka: '/media/brew-moka-human-v2',
+  v60: '/media/brew-v60-human-v2',
+  french: '/media/brew-french-human-v2',
+  filter: '/media/brew-filter-human-v2',
+  aeropress: '/media/fix-brew-aeropress',
+  turkish: '/media/fix-brew-turkish',
+  capsule: '/media/fix-brew-capsule'
+};
+
 const baseQuestions: FixQuestion[] = [
   {
     key: 'brew',
@@ -68,14 +80,14 @@ const baseQuestions: FixQuestion[] = [
     title: 'اول بگو چجوری درستش می‌کنی؟',
     subtitle: 'روش دم‌آوری تعیین می‌کنه چه چیزهایی اصلاً ارزش بررسی دارند.',
     options: [
-      { value: 'espresso', title: 'اسپرسوساز', description: 'خانگی، نیمه‌صنعتی یا صنعتی', icon: '▣' },
-      { value: 'moka', title: 'موکاپات', description: 'روی گاز یا اجاق', icon: '♨' },
-      { value: 'v60', title: 'V60 / پوراور', description: 'دم‌آوری دستی و فیلتری', icon: '▽' },
-      { value: 'french', title: 'فرنچ‌پرس', description: 'غوطه‌وری کامل', icon: '▤' },
-      { value: 'filter', title: 'قهوه‌ساز فیلتری', description: 'دریپ / قهوه‌ساز برقی', icon: '⌁' },
-      { value: 'aeropress', title: 'AeroPress', description: 'فشار دستی', icon: '↕' },
-      { value: 'turkish', title: 'قهوه ترک', description: 'جذوه / ایبریک', icon: '◔' },
-      { value: 'capsule', title: 'کپسولی', description: 'Nespresso و مشابه', icon: '●' }
+      { value: 'espresso', title: 'اسپرسوساز', description: 'خانگی، نیمه‌صنعتی یا صنعتی', icon: '▣', image: brewImages.espresso },
+      { value: 'moka', title: 'موکاپات', description: 'روی گاز یا اجاق', icon: '♨', image: brewImages.moka },
+      { value: 'v60', title: 'V60 / پوراور', description: 'دم‌آوری دستی و فیلتری', icon: '▽', image: brewImages.v60 },
+      { value: 'french', title: 'فرنچ‌پرس', description: 'غوطه‌وری کامل', icon: '▤', image: brewImages.french },
+      { value: 'filter', title: 'قهوه‌ساز فیلتری', description: 'دریپ / قهوه‌ساز برقی', icon: '⌁', image: brewImages.filter },
+      { value: 'aeropress', title: 'AeroPress', description: 'فشار دستی', icon: '↕', image: brewImages.aeropress },
+      { value: 'turkish', title: 'قهوه ترک', description: 'جذوه / ایبریک', icon: '◔', image: brewImages.turkish },
+      { value: 'capsule', title: 'کپسولی', description: 'Nespresso و مشابه', icon: '●', image: brewImages.capsule }
     ]
   },
   {
@@ -84,14 +96,14 @@ const baseQuestions: FixQuestion[] = [
     title: 'دقیقاً چی اذیتت می‌کنه؟',
     subtitle: 'نزدیک‌ترین گزینه را بزن؛ بعد از روی بقیه جواب‌ها ریزترش می‌کنیم.',
     options: [
-      { value: 'bitter', title: 'زیادی تلخه', description: 'تلخی غالب و ناخوشایند', icon: '◼' },
-      { value: 'sour', title: 'ترشه', description: 'ترشی تیز و نارس', icon: '◒' },
-      { value: 'watery', title: 'آبکیه', description: 'کم‌جان و رقیق', icon: '○' },
-      { value: 'dry', title: 'گسه / دهنو خشک می‌کنه', description: 'ته فنجان حس خشکی می‌ده', icon: '◇' },
-      { value: 'burnt', title: 'سوختگی می‌ده', description: 'دودی، خاکستری یا سوخته', icon: '▲' },
-      { value: 'flat', title: 'عطر و مزه نداره', description: 'فلت و بی‌هیجان', icon: '—' },
-      { value: 'heavy', title: 'زیادی سنگینه', description: 'غلیظ و خسته‌کننده', icon: '■' },
-      { value: 'inconsistent', title: 'هر بار یه چیز میشه', description: 'نتیجه قابل تکرار نیست', icon: '↯' }
+      { value: 'bitter', title: 'زیادی تلخه', description: 'تلخی غالب و ناخوشایند', icon: '◼', image: '/media/fix-problem-bitter' },
+      { value: 'sour', title: 'ترشه', description: 'ترشی تیز و نارس', icon: '◒', image: '/media/fix-problem-sour' },
+      { value: 'watery', title: 'آبکیه', description: 'کم‌جان و رقیق', icon: '○', image: '/media/fix-problem-watery' },
+      { value: 'dry', title: 'گسه / دهنو خشک می‌کنه', description: 'ته فنجان حس خشکی می‌ده', icon: '◇', image: '/media/fix-problem-dry' },
+      { value: 'burnt', title: 'سوختگی می‌ده', description: 'دودی، خاکستری یا سوخته', icon: '▲', image: '/media/fix-problem-burnt' },
+      { value: 'flat', title: 'عطر و مزه نداره', description: 'فلت و بی‌هیجان', icon: '—', image: '/media/fix-problem-flat' },
+      { value: 'heavy', title: 'زیادی سنگینه', description: 'غلیظ و خسته‌کننده', icon: '■', image: '/media/fix-problem-heavy' },
+      { value: 'inconsistent', title: 'هر بار یه چیز میشه', description: 'نتیجه قابل تکرار نیست', icon: '↯', image: '/media/fix-problem-inconsistent' }
     ]
   }
 ];
@@ -103,10 +115,10 @@ const commonQuestions: FixQuestion[] = [
     title: 'آسیابت نسبت به روش دم‌آوری چطوره؟',
     subtitle: 'اگر مطمئن نیستی، «نمی‌دونم» کاملاً جواب قابل استفاده‌ایه.',
     options: [
-      { value: 'fine', title: 'خیلی ریزه', description: 'پودری‌تر یا عبور آب سخت‌تره', icon: '•••' },
-      { value: 'medium', title: 'تقریباً نرماله', description: 'همون محدوده‌ای که معمولاً استفاده می‌کنم', icon: '••' },
-      { value: 'coarse', title: 'درشته', description: 'دانه‌ها واضح‌تر و عبور آب راحت‌تره', icon: '•' },
-      { value: 'unknown', title: 'نمی‌دونم', description: 'با بقیه جواب‌ها جلو می‌ریم', icon: '?' }
+      { value: 'fine', title: 'خیلی ریزه', description: 'پودری‌تر یا عبور آب سخت‌تره', icon: '•••', image: '/media/fix-grind-fine' },
+      { value: 'medium', title: 'تقریباً نرماله', description: 'همون محدوده‌ای که معمولاً استفاده می‌کنم', icon: '••', image: '/media/fix-grind-medium' },
+      { value: 'coarse', title: 'درشته', description: 'دانه‌ها واضح‌تر و عبور آب راحت‌تره', icon: '•', image: '/media/fix-grind-coarse' },
+      { value: 'unknown', title: 'نمی‌دونم', description: 'با بقیه جواب‌ها جلو می‌ریم', icon: '?', image: '/media/fix-grind-unknown' }
     ]
   },
   {
@@ -115,10 +127,10 @@ const commonQuestions: FixQuestion[] = [
     title: 'آبت موقع دم‌آوری چقدر داغه؟',
     subtitle: 'تقریبی جواب بده؛ لازم نیست حتماً دماسنج داشته باشی.',
     options: [
-      { value: 'boiling', title: 'تقریباً قل‌قل', description: 'همین که جوش میاد استفاده می‌کنم', icon: '♨' },
-      { value: 'hot', title: 'داغ ولی نه جوشان', description: 'کمی بعد از جوش استفاده می‌کنم', icon: '◉' },
-      { value: 'moderate', title: 'خنک‌تر', description: 'عمداً دما را پایین‌تر می‌گیرم', icon: '◌' },
-      { value: 'unknown', title: 'نمی‌دونم', description: 'دما را اندازه نگرفتم', icon: '?' }
+      { value: 'boiling', title: 'تقریباً قل‌قل', description: 'همین که جوش میاد استفاده می‌کنم', icon: '♨', image: '/media/fix-water-boiling' },
+      { value: 'hot', title: 'داغ ولی نه جوشان', description: 'کمی بعد از جوش استفاده می‌کنم', icon: '◉', image: '/media/fix-water-hot' },
+      { value: 'moderate', title: 'خنک‌تر', description: 'عمداً دما را پایین‌تر می‌گیرم', icon: '◌', image: '/media/fix-water-moderate' },
+      { value: 'unknown', title: 'نمی‌دونم', description: 'دما را اندازه نگرفتم', icon: '?', image: '/media/fix-water-unknown' }
     ]
   },
   {
@@ -127,10 +139,10 @@ const commonQuestions: FixQuestion[] = [
     title: 'فنجانت نسبت به معمول چقدر غلیظه؟',
     subtitle: 'این جواب کمک می‌کنه مشکل قدرت فنجان را از استخراج جدا کنیم.',
     options: [
-      { value: 'strong', title: 'خیلی غلیظه', description: 'قهوه زیاد یا آب/خروجی کم', icon: '■■' },
-      { value: 'balanced', title: 'تقریباً نرماله', description: 'از نظر قدرت عجیب نیست', icon: '■□' },
-      { value: 'weak', title: 'رقیقه', description: 'آب زیاد یا قهوه کم', icon: '□□' },
-      { value: 'unknown', title: 'نمی‌دونم', description: 'با نشانه‌های دیگه تشخیص می‌دیم', icon: '?' }
+      { value: 'strong', title: 'خیلی غلیظه', description: 'قهوه زیاد یا آب/خروجی کم', icon: '■■', image: '/media/fix-ratio-strong' },
+      { value: 'balanced', title: 'تقریباً نرماله', description: 'از نظر قدرت عجیب نیست', icon: '■□', image: '/media/fix-ratio-balanced' },
+      { value: 'weak', title: 'رقیقه', description: 'آب زیاد یا قهوه کم', icon: '□□', image: '/media/fix-ratio-weak' },
+      { value: 'unknown', title: 'نمی‌دونم', description: 'با نشانه‌های دیگه تشخیص می‌دیم', icon: '?', image: '/media/fix-ratio-unknown' }
     ]
   },
   {
@@ -139,10 +151,10 @@ const commonQuestions: FixQuestion[] = [
     title: 'رُست قهوه‌ات بیشتر کدوم سمته؟',
     subtitle: 'اگر روی بسته نوشته نشده، از رنگ دانه حدس بزن.',
     options: [
-      { value: 'dark', title: 'تیره', description: 'دانه تیره‌تر، گاهی کمی روغنی', icon: '●' },
-      { value: 'medium', title: 'متوسط', description: 'قهوه‌ای متوسط', icon: '◉' },
-      { value: 'light', title: 'روشن', description: 'رنگ روشن‌تر و عطر میوه‌ای‌تر', icon: '○' },
-      { value: 'unknown', title: 'نمی‌دونم', description: 'اشکالی نداره', icon: '?' }
+      { value: 'dark', title: 'تیره', description: 'دانه تیره‌تر، گاهی کمی روغنی', icon: '●', image: '/media/fix-roast-dark' },
+      { value: 'medium', title: 'متوسط', description: 'قهوه‌ای متوسط', icon: '◉', image: '/media/fix-roast-medium' },
+      { value: 'light', title: 'روشن', description: 'رنگ روشن‌تر و عطر میوه‌ای‌تر', icon: '○', image: '/media/fix-roast-light' },
+      { value: 'unknown', title: 'نمی‌دونم', description: 'اشکالی نداره', icon: '?', image: '/media/fix-roast-unknown' }
     ]
   }
 ];
@@ -207,10 +219,10 @@ function flowQuestion(brew: FixBrew): FixQuestion {
     title: copy.title,
     subtitle: 'تقریبی انتخاب کن؛ دنبال عدد آزمایشگاهی نیستیم.',
     options: [
-      { value: 'fast', title: copy.fast, description: 'سمت سریع‌تر', icon: '→' },
-      { value: 'normal', title: copy.normal, description: 'محدوده معمول', icon: '●' },
-      { value: 'slow', title: copy.slow, description: 'سمت کندتر', icon: '←' },
-      { value: 'unknown', title: 'نمی‌دونم', description: 'با بقیه نشانه‌ها ادامه بده', icon: '?' }
+      { value: 'fast', title: copy.fast, description: 'سمت سریع‌تر', icon: '→', image: brewImages[brew] },
+      { value: 'normal', title: copy.normal, description: 'محدوده معمول', icon: '●', image: brewImages[brew] },
+      { value: 'slow', title: copy.slow, description: 'سمت کندتر', icon: '←', image: brewImages[brew] },
+      { value: 'unknown', title: 'نمی‌دونم', description: 'با بقیه نشانه‌ها ادامه بده', icon: '?', image: brewImages[brew] }
     ]
   };
 }
@@ -274,10 +286,10 @@ function techniqueQuestion(brew: FixBrew): FixQuestion {
     title: item.title,
     subtitle: 'آخرین سؤال؛ این یکی برای تشخیص نوسان و خطای روشه.',
     options: [
-      { value: 'steady', title: item.steady, description: 'نتیجه معمولاً قابل تکراره', icon: '✓' },
-      { value: 'variable', title: item.variable, description: 'متغیرها ثابت نیستند', icon: '↯' },
-      { value: 'aggressive', title: item.aggressive, description: 'احتمال فشار یا حرارت زیاد', icon: '!' },
-      { value: 'unknown', title: 'مطمئن نیستم', description: 'با بقیه جواب‌ها تشخیص بده', icon: '?' }
+      { value: 'steady', title: item.steady, description: 'نتیجه معمولاً قابل تکراره', icon: '✓', image: brewImages[brew] },
+      { value: 'variable', title: item.variable, description: 'متغیرها ثابت نیستند', icon: '↯', image: brewImages[brew] },
+      { value: 'aggressive', title: item.aggressive, description: 'احتمال فشار یا حرارت زیاد', icon: '!', image: brewImages[brew] },
+      { value: 'unknown', title: 'مطمئن نیستم', description: 'با بقیه جواب‌ها تشخیص بده', icon: '?', image: brewImages[brew] }
     ]
   };
 }
