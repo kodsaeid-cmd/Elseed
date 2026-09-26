@@ -22,21 +22,26 @@ function int(value: unknown, fallback = 0) {
   return Number.isFinite(n) ? Math.trunc(n) : fallback;
 }
 
-async function requireAdmin(cookies: Parameters<RequestHandler>[0]['cookies'], platform?: App.Platform) {
+async function requireAdmin(
+  cookies: Parameters<RequestHandler>[0]['cookies'],
+  platform?: App.Platform
+): Promise<{ db: ElseedD1Database } | Response> {
   if (!(await isAdminAuthenticated(cookies, platform))) {
-    return { response: json({ error: 'دسترسی مدیر الزامی است.' }, { status: 401 }) } as const;
+    return json({ error: 'دسترسی مدیر الزامی است.' }, { status: 401 });
   }
+
   const db = platform?.env?.DB;
   if (!db) {
-    return { response: json({ error: 'D1 در دسترس نیست.' }, { status: 503 }) } as const;
+    return json({ error: 'D1 در دسترس نیست.' }, { status: 503 });
   }
+
   await ensureCmsSchema(db);
-  return { db } as const;
+  return { db };
 }
 
 export const GET: RequestHandler = async ({ cookies, platform, url }) => {
   const auth = await requireAdmin(cookies, platform);
-  if ('response' in auth) return auth.response;
+  if (auth instanceof Response) return auth;
 
   const articleId = clean(url.searchParams.get('articleId'), 140);
   const [assets, placements] = await Promise.all([
@@ -57,7 +62,7 @@ export const GET: RequestHandler = async ({ cookies, platform, url }) => {
 
 export const POST: RequestHandler = async ({ request, cookies, platform }) => {
   const auth = await requireAdmin(cookies, platform);
-  if ('response' in auth) return auth.response;
+  if (auth instanceof Response) return auth;
 
   const contentType = request.headers.get('content-type') || '';
 
