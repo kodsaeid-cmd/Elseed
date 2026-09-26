@@ -6,6 +6,7 @@ import {
   getAdminArticle,
   getAdminArticles,
   parseArticleForm,
+  setAdminArticleStatus,
   updateAdminArticle
 } from '$lib/server/cms';
 
@@ -21,6 +22,7 @@ export const load: PageServerLoad = async ({ params, cookies, platform, url }) =
   if (!article) throw error(404, 'مقاله پیدا نشد.');
 
   const articles = await getAdminArticles(db);
+
   return {
     article,
     saved: url.searchParams.get('saved') ?? '',
@@ -28,39 +30,74 @@ export const load: PageServerLoad = async ({ params, cookies, platform, url }) =
   };
 };
 
+async function requireDb(cookies: Parameters<Actions[string]>[0]['cookies'], platform?: App.Platform) {
+  if (!(await isAdminAuthenticated(cookies, platform))) {
+    throw redirect(303, '/admin/login');
+  }
+
+  const db = platform?.env?.DB;
+  if (!db) throw error(503, 'D1 در دسترس نیست.');
+  return db;
+}
+
 export const actions: Actions = {
-  default: async ({ params, request, cookies, platform }) => {
-    if (!(await isAdminAuthenticated(cookies, platform))) {
-      throw redirect(303, '/admin/login');
-    }
-
-    const db = platform?.env?.DB;
-    if (!db) return fail(503, { error: 'D1 در دسترس نیست.' });
-
-    let savedStatus: 'draft' | 'published' | 'archived' = 'draft';
+  draft: async ({ params, request, cookies, platform }) => {
+    const db = await requireDb(cookies, platform);
 
     try {
-      const form = await request.formData();
-      const input = parseArticleForm(form);
-      savedStatus = input.status;
+      const input = parseArticleForm(await request.formData());
+      input.status = 'draft';
       await updateAdminArticle(db, params.id, input);
     } catch (caught) {
-      const message = caught instanceof Error ? caught.message : 'ذخیره تغییرات انجام نشد.';
+      const message = caught instanceof Error ? caught.message : 'ذخیره پیش‌نویس انجام نشد.';
       return fail(400, { error: message });
     }
 
-    throw redirect(303, `/admin/magazine/${params.id}?saved=${savedStatus}`);
+    throw redirect(303, `/admin/magazine/${params.id}?saved=draft`);
+  },
+
+  publish: async ({ params, request, cookies, platform }) => {
+    const db = await requireDb(cookies, platform);
+
+    try {
+      // First persist the full editor payload through the already-proven draft path.
+      const input = parseArticleForm(await request.formData());
+      input.status = 'draft';
+      await updateAdminArticle(db, params.id, input);
+
+      // Then perform publication as a small, isolated, verified status transition.
+      await setAdminArticleStatus(db, params.id, 'published');
+    } catch (caught) {
+      const message = caught instanceof Error ? caught.message : 'انتشار مقاله انجام نشد.';
+      return fail(400, { error: message });
+    }
+
+    throw redirect(303, `/admin/magazine/${params.id}?saved=published`);
+  },
+
+  archive: async ({ params, cookies, platform }) => {
+    const db = await requireDb(cookies, platform);
+
+    try {
+      await setAdminArticleStatus(db, params.id, 'archived');
+    } catch (caught) {
+      const message = caught instanceof Error ? caught.message : 'آرشیو مقاله انجام نشد.';
+      return fail(400, { error: message });
+    }
+
+    throw redirect(303, `/admin/magazine/${params.id}?saved=archived`);
   },
 
   delete: async ({ params, cookies, platform }) => {
-    if (!(await isAdminAuthenticated(cookies, platform))) {
-      throw redirect(303, '/admin/login');
+    const db = await requireDb(cookies, platform);
+
+    try {
+      await deleteAdminArticle(db, params.id);
+    } catch (caught) {
+      const message = caught instanceof Error ? caught.message : 'حذف مقاله انجام نشد.';
+      return fail(400, { error: message });
     }
 
-    const db = platform?.env?.DB;
-    if (!db) return fail(503, { error: 'D1 در دسترس نیست.' });
-
-    await deleteAdminArticle(db, params.id);
     throw redirect(303, '/admin/magazine');
   }
 };
