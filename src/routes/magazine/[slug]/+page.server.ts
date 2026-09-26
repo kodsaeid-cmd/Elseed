@@ -13,7 +13,8 @@ export const load: PageServerLoad = async ({ params, platform }) => {
   const articles = await getPublishedArticles(db);
   const preferred = (article.relatedSlugs ?? [])
     .map((slug) => articles.find((item) => item.slug === slug))
-    .filter((item): item is NonNullable<typeof item> => Boolean(item) && item.slug !== article.slug);
+    .filter((item): item is NonNullable<typeof item> => item !== undefined)
+    .filter((item) => item.slug !== article.slug);
 
   const fallback = [
     ...articles.filter(
