@@ -26,6 +26,12 @@ export type MagazineArticle = {
     href: string;
     text: string;
   };
+  seo?: {
+    metaTitle: string;
+    metaDescription: string;
+    canonicalUrl: string;
+    robots: string;
+  };
 };
 
 export const magazineCategories = [
