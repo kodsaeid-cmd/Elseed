@@ -1,10 +1,25 @@
 <script lang="ts">
   import Header from '$lib/Header.svelte';
   import Footer from '$lib/Footer.svelte';
+  import ArticleMediaGroup from '$lib/ArticleMediaGroup.svelte';
 
   let { data } = $props();
   const article = data.article;
   const related = data.related;
+  const media = data.media ?? [];
+
+  const mediaBefore = media.filter((item: any) => Number(item.after_paragraph || 0) === 0);
+  let paragraphIndex = 0;
+  const sectionsWithMedia = article.sections.map((section: any) => ({
+    ...section,
+    paragraphs: (section.paragraphs ?? []).map((paragraph: string) => {
+      paragraphIndex += 1;
+      return {
+        text: paragraph,
+        media: media.filter((item: any) => Number(item.after_paragraph || 0) === paragraphIndex)
+      };
+    })
+  }));
 
   const faqSchema = article.faq?.length
     ? {
@@ -104,11 +119,14 @@
           </section>
         {/if}
 
-        {#each article.sections as section}
+        <ArticleMediaGroup items={mediaBefore} />
+
+        {#each sectionsWithMedia as section}
           <section class="article-section">
             <h2>{section.heading}</h2>
             {#each section.paragraphs as paragraph}
-              <p>{paragraph}</p>
+              <p>{paragraph.text}</p>
+              <ArticleMediaGroup items={paragraph.media} />
             {/each}
             {#if section.bullets}
               <ul>
