@@ -170,8 +170,21 @@ export async function ensureCmsSchema(db?: ElseedD1Database) {
       width INTEGER,
       height INTEGER,
       source TEXT NOT NULL DEFAULT 'external',
+      object_key TEXT NOT NULL DEFAULT '',
+      media_type TEXT NOT NULL DEFAULT 'image',
+      size_bytes INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )`,
+    `CREATE TABLE IF NOT EXISTS cms_article_media (
+      id TEXT PRIMARY KEY,
+      article_id TEXT NOT NULL,
+      media_id TEXT NOT NULL,
+      after_paragraph INTEGER NOT NULL DEFAULT 1,
+      caption TEXT NOT NULL DEFAULT '',
+      alt_text TEXT NOT NULL DEFAULT '',
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
     )`,
     `CREATE TABLE IF NOT EXISTS cms_site_settings (
       key TEXT PRIMARY KEY,
