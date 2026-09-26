@@ -1,14 +1,15 @@
 <script lang="ts">
   import Header from '$lib/Header.svelte';
   import Footer from '$lib/Footer.svelte';
-  import { magazineArticles, magazineCategories } from '$lib/magazine';
+  import { magazineCategories } from '$lib/magazine';
 
-  const featured = magazineArticles.find((article) => article.featured) ?? magazineArticles[0];
+  let { data } = $props();
+  const featured = $derived(data.articles.find((article: any) => article.featured) ?? data.articles[0]);
   let activeCategory = $state('همه');
   let visibleArticles = $derived(
     activeCategory === 'همه'
-      ? magazineArticles
-      : magazineArticles.filter((article) => article.category === activeCategory)
+      ? data.articles
+      : data.articles.filter((article: any) => article.category === activeCategory)
   );
 </script>
 
