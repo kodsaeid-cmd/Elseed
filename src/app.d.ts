@@ -10,10 +10,36 @@ declare global {
     prepare(query: string): ElseedD1PreparedStatement;
   }
 
+  interface ElseedR2ObjectBody {
+    body: ReadableStream<Uint8Array>;
+    size?: number;
+    httpMetadata?: {
+      contentType?: string;
+      cacheControl?: string;
+    };
+  }
+
+  interface ElseedR2Bucket {
+    put(
+      key: string,
+      value: ArrayBuffer | ArrayBufferView | ReadableStream,
+      options?: {
+        httpMetadata?: {
+          contentType?: string;
+          cacheControl?: string;
+        };
+        customMetadata?: Record<string, string>;
+      }
+    ): Promise<unknown>;
+    get(key: string): Promise<ElseedR2ObjectBody | null>;
+    delete(key: string): Promise<void>;
+  }
+
   namespace App {
     interface Platform {
       env: {
         DB: ElseedD1Database;
+        MEDIA?: ElseedR2Bucket;
         [key: string]: unknown;
       };
     }
