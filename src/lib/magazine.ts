@@ -5,6 +5,7 @@ export type MagazineSection = {
 };
 
 export type MagazineArticle = {
+  id?: string;
   slug: string;
   title: string;
   eyebrow: string;
