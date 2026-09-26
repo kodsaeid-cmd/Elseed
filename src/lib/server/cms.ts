@@ -441,13 +441,17 @@ export async function updateAdminArticle(
   const current = await getAdminArticle(db, id);
   if (!current) throw new Error('مقاله پیدا نشد.');
 
-  await db
-    .prepare(
-      `INSERT INTO cms_article_revisions (article_id, snapshot_json)
-       VALUES (?, ?)`
-    )
-    .bind(id, JSON.stringify(current))
-    .run();
+  try {
+    await db
+      .prepare(
+        `INSERT INTO cms_article_revisions (article_id, snapshot_json)
+         VALUES (?, ?)`
+      )
+      .bind(id, JSON.stringify(current))
+      .run();
+  } catch {
+    // Revisions are useful, but a revision write must never block saving or publishing.
+  }
 
   const publishedAt =
     input.status === 'published'
@@ -488,13 +492,17 @@ export async function updateAdminArticle(
 
   if (result.success === false) throw new Error(result.error || 'ویرایش مقاله انجام نشد.');
 
-  await db
-    .prepare(
-      `INSERT INTO cms_audit_log (action, entity_type, entity_id, payload_json)
-       VALUES ('update', 'article', ?, ?)`
-    )
-    .bind(id, JSON.stringify({ slug: input.slug, status: input.status }))
-    .run();
+  try {
+    await db
+      .prepare(
+        `INSERT INTO cms_audit_log (action, entity_type, entity_id, payload_json)
+         VALUES ('update', 'article', ?, ?)`
+      )
+      .bind(id, JSON.stringify({ slug: input.slug, status: input.status }))
+      .run();
+  } catch {
+    // Audit logging is best-effort and must not block the editorial workflow.
+  }
 }
 
 export async function deleteAdminArticle(db: ElseedD1Database, id: string) {
