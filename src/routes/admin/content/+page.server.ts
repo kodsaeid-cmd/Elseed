@@ -19,10 +19,11 @@ export const load: PageServerLoad = async ({ cookies, platform }) => {
   const db = platform?.env?.DB;
   const articles = await getAdminArticles(db);
 
-  const [journeys, newsletter, media] = await Promise.all([
+  const [journeys, newsletter, media, stories] = await Promise.all([
     count(db, 'SELECT COUNT(*) AS count FROM journey_sessions'),
     count(db, "SELECT COUNT(*) AS count FROM newsletter_subscribers WHERE status = 'subscribed'"),
-    count(db, 'SELECT COUNT(*) AS count FROM cms_media_assets')
+    count(db, 'SELECT COUNT(*) AS count FROM cms_media_assets'),
+    count(db, "SELECT COUNT(*) AS count FROM coffee_stories WHERE status = 'published'")
   ]);
 
   return {
@@ -32,7 +33,8 @@ export const load: PageServerLoad = async ({ cookies, platform }) => {
       seoIssues: articles.filter((item) => !item.meta_title || !item.meta_description).length,
       journeys,
       newsletter,
-      media
+      media,
+      stories
     }
   };
 };
