@@ -1,4 +1,5 @@
 <script lang="ts">
+  import AdminArticleMediaTab from '$lib/AdminArticleMediaTab.svelte';
   let {
     initial,
     submitLabel = 'ذخیره مقاله',
@@ -429,20 +430,20 @@
           </div>
 
           {#if articleSaved}
-            <div class="media-gate">
-              <div class="gate-icon">02</div>
-              <div>
-                <strong>رسانه‌های داخل متن از Media Library مدیریت می‌شوند.</strong>
-                <p>تصویر و ویدئو را در کتابخانه ثبت کن و جایگاه آن‌ها را برای مقاله مشخص کن. اتصال چندرسانه‌ای مقاله در گام بعدی این ماژول توسعه داده می‌شود.</p>
-              </div>
-              <a class="primary" href="/admin/media">باز کردن کتابخانه رسانه</a>
-            </div>
+            <AdminArticleMediaTab
+              articleId={String(initial.id)}
+              articleBody={body}
+              onFeatured={(url, alt) => {
+                coverImage = url;
+                coverAlt = alt;
+              }}
+            />
           {:else}
             <div class="media-gate">
               <div class="gate-icon">02</div>
               <div>
                 <strong>برای افزودن چند تصویر یا ویدئو، اول پیش‌نویس را ذخیره کن.</strong>
-                <p>بعد از ذخیره، همین ساختار مقاله باز می‌ماند و می‌توانی رسانه‌های داخل متن را مدیریت کنی.</p>
+                <p>بعد از ذخیره، داخل همین تب می‌توانی چند فایل را هم‌زمان آپلود کنی، از کتابخانه انتخاب کنی و جای هر رسانه را بین پاراگراف‌ها مشخص کنی.</p>
               </div>
               <button class="primary" type="submit" formaction="?/draft">ذخیره پیش‌نویس و ادامه</button>
             </div>
