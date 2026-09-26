@@ -95,6 +95,18 @@ export const magazineArticles: MagazineArticle[] = [
       }
     ],
     takeaway: 'اگر قهوه روی خوابت اثر می‌گذارد، اول زمان و مقدار مصرف را تنظیم کن؛ بعد درباره‌ی نوع قهوه تصمیم بگیر.',
+    profileQuestion: {
+      enabled: true,
+      key: 'caffeine.sleep',
+      title: 'قهوه عصر روی خواب تو چه اثری می‌ذاره؟',
+      description: 'جوابت فقط برای شخصی‌تر کردن تجربه EL.SEED استفاده می‌شه.',
+      options: [
+        { value: 'none', label: 'تقریباً هیچ اثری نداره' },
+        { value: 'sometimes', label: 'بعضی وقت‌ها خوابم رو عقب می‌اندازه' },
+        { value: 'yes', label: 'واضحاً روی خوابم اثر می‌ذاره' },
+        { value: 'unknown', label: 'هنوز مطمئن نیستم' }
+      ]
+    },
     cta: {
       label: 'قهوه‌ام را پیدا کن',
       href: '/find',
@@ -284,6 +296,18 @@ export const magazineArticles: MagazineArticle[] = [
       }
     ],
     takeaway: 'یک قهوه قرار نیست تمام روز را پوشش بدهد. موقعیت مصرف می‌تواند بخشی از انتخاب قهوه باشد.',
+    profileQuestion: {
+      enabled: true,
+      key: 'habit.afternoon',
+      title: 'قهوه عصر برای تو بیشتر چه نقشی داره؟',
+      description: 'این جواب کمک می‌کنه مقاله‌ها و پیشنهادهای بعدی به ریتم روز تو نزدیک‌تر بشن.',
+      options: [
+        { value: 'energy', label: 'برای انرژی' },
+        { value: 'focus', label: 'برای تمرکز' },
+        { value: 'social', label: 'برای معاشرت و حال خوب' },
+        { value: 'taste', label: 'فقط برای مزه' }
+      ]
+    },
     cta: {
       label: 'بر اساس زمان روز انتخاب کنم',
       href: '/find',
