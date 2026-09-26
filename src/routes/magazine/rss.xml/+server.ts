@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { magazineArticles } from '$lib/magazine';
+import { getPublishedArticles } from '$lib/server/cms';
 
 const origin = 'https://elseed.ir';
 
@@ -12,7 +12,8 @@ function escapeXml(value: string) {
     .replaceAll("'", '&apos;');
 }
 
-export const GET: RequestHandler = () => {
+export const GET: RequestHandler = async ({ platform }) => {
+  const magazineArticles = await getPublishedArticles(platform?.env?.DB);
   const items = magazineArticles
     .map(
       (article) => `    <item>
