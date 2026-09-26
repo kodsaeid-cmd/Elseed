@@ -4,6 +4,7 @@ import type { RequestHandler } from './$types';
 type FindProfile = {
   time?: string;
   effect?: string;
+  sensitivity?: string;
   taste?: string;
   brew?: string;
   line?: string;
@@ -45,6 +46,7 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     journey: 'find',
     time: typeof profile.time === 'string' ? profile.time.slice(0, 32) : null,
     effect: typeof profile.effect === 'string' ? profile.effect.slice(0, 32) : null,
+    sensitivity: typeof profile.sensitivity === 'string' ? profile.sensitivity.slice(0, 32) : null,
     taste: typeof profile.taste === 'string' ? profile.taste.slice(0, 32) : null,
     brew: typeof profile.brew === 'string' ? profile.brew.slice(0, 32) : null,
     line: profile.line,
