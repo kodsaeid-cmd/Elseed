@@ -22,6 +22,19 @@
   const totalSteps = 8;
   const progress = $derived(Math.min(100, ((step + 1) / totalSteps) * 100));
 
+  const diagnosisImageMap: Record<string, string> = {
+    over: '/media/fix-grind-fine',
+    under: '/media/fix-grind-coarse',
+    hot: '/media/fix-water-boiling',
+    strong: '/media/fix-ratio-strong',
+    weak: '/media/fix-ratio-weak',
+    dark: '/media/fix-roast-dark',
+    stale: '/media/fix-problem-flat',
+    technique: '/media/fix-problem-inconsistent'
+  };
+
+  const diagnosisImage = $derived(result ? diagnosisImageMap[result.code] ?? '/media/fix-problem-inconsistent' : '');
+
   function selectOption(key: FixQuestionKey, value: string) {
     const nextAnswers = { ...answers, [key]: value } as Partial<FixAnswers>;
     answers = nextAnswers;
@@ -169,99 +182,132 @@
     <section class="diagnosis-shell shell">
       <header class="diagnosis-hero">
         <div class="diagnosis-copy">
-          <span class="diagnosis-eyebrow">DIAGNOSIS</span>
-          <span class="fix-kicker">تشخیص احتمالی</span>
+          <div class="diagnosis-kicker-row">
+            <span class="diagnosis-eyebrow">DIAGNOSIS</span>
+            <span class="fix-kicker">تشخیص احتمالی</span>
+          </div>
           <h1>{result.title}</h1>
           <p>{result.short}</p>
+
+          <div class="diagnosis-summary-pills">
+            <span><b>روش</b>{brewLabels[answers.brew as FixAnswers['brew']]}</span>
+            <span><b>مشکل</b>{problemLabels[answers.problem as FixAnswers['problem']]}</span>
+            <span class="confidence"><b>اعتماد</b>{result.confidence}</span>
+          </div>
         </div>
 
-        <div class="diagnosis-meta">
-          <div>
-            <small>روش دم‌آوری</small>
-            <strong>{brewLabels[answers.brew as FixAnswers['brew']]}</strong>
+        <div class="diagnosis-visual">
+          <div class="diagnosis-photo-ring">
+            <img src={diagnosisImage} alt="" />
           </div>
-          <div>
-            <small>مشکل فنجان</small>
-            <strong>{problemLabels[answers.problem as FixAnswers['problem']]}</strong>
-          </div>
-          <div class="confidence">
-            <small>اعتماد تشخیص</small>
-            <strong>{result.confidence}</strong>
+          <div class="diagnosis-visual-copy">
+            <span>EL.SEED DIAGNOSER</span>
+            <strong>یک تغییر، یک تست، یک نتیجه.</strong>
           </div>
         </div>
       </header>
 
-      <section class="diagnosis-plan">
-        <article class="plan-card primary">
-          <div class="plan-number">01</div>
-          <div class="plan-copy">
-            <span class="diagnosis-label">اول فقط این کار رو بکن</span>
-            <h2>{result.firstAction}</h2>
-            <p>یک تغییر، یک تست، بعد تصمیم بعدی. هیچ متغیر دیگری را فعلاً تغییر نده.</p>
+      <section class="prescription">
+        <div class="prescription-head">
+          <div>
+            <span>نسخه پیشنهادی برای فنجان بعدی</span>
+            <h2>این ترتیب رو اجرا کن.</h2>
           </div>
-          <span class="plan-badge">FIRST MOVE</span>
-        </article>
+          <small>ترتیب مهمه؛ چند متغیر رو هم‌زمان تغییر نده.</small>
+        </div>
 
-        <article class="plan-card secondary">
-          <div class="plan-number">02</div>
-          <div class="plan-copy">
-            <span class="diagnosis-label">اگر جواب نداد</span>
+        <div class="prescription-flow">
+          <article class="prescription-step primary">
+            <div class="step-topline">
+              <span class="step-no">01</span>
+              <span class="step-status">اول انجام بده</span>
+            </div>
+            <h3>{result.firstAction}</h3>
+            <p>فقط همین تغییر را اعمال کن و یک فنجان کامل با بقیه تنظیمات قبلی بگیر.</p>
+            <div class="step-marker"><i></i><span>تست اول</span></div>
+          </article>
+
+          <div class="prescription-arrow" aria-hidden="true">←</div>
+
+          <article class="prescription-step">
+            <div class="step-topline">
+              <span class="step-no">02</span>
+              <span class="step-status">فقط اگر جواب نداد</span>
+            </div>
             <h3>{result.secondAction}</h3>
-            <p>فقط بعد از تست مرحله اول سراغ این تغییر برو.</p>
-          </div>
-        </article>
+            <p>این مرحله را فقط وقتی اجرا کن که مرحله اول تغییر محسوسی ایجاد نکرده باشد.</p>
+            <div class="step-marker"><i></i><span>تست دوم</span></div>
+          </article>
+        </div>
       </section>
 
       <section class="diagnosis-insight-grid">
         <article class="diagnosis-why">
           <div class="insight-head">
-            <span>چرا به این نتیجه رسیدیم؟</span>
+            <div>
+              <span>چرا این تشخیص؟</span>
+              <h3>این نشونه‌ها ما رو به این نتیجه رسوند.</h3>
+            </div>
             <b>WHY</b>
           </div>
           <p>{result.why}</p>
           <div class="diagnosis-evidence">
-            {#each result.evidence as item}<span>✓ {item}</span>{/each}
+            {#each result.evidence as item}
+              <span><i>✓</i>{item}</span>
+            {/each}
           </div>
         </article>
 
-        <article class="diagnosis-guard-card">
-          <div class="guard-icon">!</div>
+        <article class="diagnosis-do-not">
+          <div class="do-not-icon">×</div>
           <div>
-            <span>فعلاً دست نزن</span>
+            <span>فعلاً تغییر نده</span>
             <strong>{result.keepStill}</strong>
+            <small>این‌ها رو ثابت نگه می‌داریم تا بفهمیم تغییر اصلی چه اثری داشته.</small>
           </div>
         </article>
 
         <article class="diagnosis-rule-card">
           <span>قاعده EL.SEED</span>
           <strong>هر بار فقط یک متغیر.</strong>
-          <small>اگر چند چیز را با هم عوض کنی، نمی‌فهمیم کدام تغییر جواب داده.</small>
+          <small>اگر هم‌زمان چند چیز رو تغییر بدی، هیچ‌وقت نمی‌فهمی مشکل دقیقاً کجا بوده.</small>
         </article>
       </section>
 
       {#if feedback === 'idle'}
         <section class="diagnosis-feedback">
           <div class="feedback-copy">
-            <span>بعد از تست مرحله اول</span>
-            <h2>نتیجه چی شد؟</h2>
-            <p>همین جواب، مرحله بعدی تشخیص را مشخص می‌کند.</p>
+            <span>بعد از یک فنجان تست</span>
+            <h2>خب، نتیجه چی شد؟</h2>
+            <p>پاسخت تعیین می‌کنه مسیر تشخیص ادامه پیدا کنه یا همین‌جا تموم بشه.</p>
           </div>
+
           <div class="feedback-actions">
-            <button type="button" class="fixed" onclick={() => sendFeedback('fixed')}>درست شد <b>✓</b></button>
-            <button type="button" class="not-fixed" onclick={() => sendFeedback('not_fixed')}>هنوز درست نشده <b>←</b></button>
+            <button type="button" class="fixed" onclick={() => sendFeedback('fixed')}>
+              <span>درست شد</span><b>✓</b>
+            </button>
+            <button type="button" class="not-fixed" onclick={() => sendFeedback('not_fixed')}>
+              <span>هنوز درست نشده</span><b>←</b>
+            </button>
           </div>
         </section>
       {:else if feedback === 'fixed'}
         <section class="diagnosis-followup success">
-          <span>✓ متغیر درست را پیدا کردیم</span>
-          <h2>همین نسخه را برای فنجان بعدی هم تکرار کن.</h2>
-          <p>اگر مشکل برگشت، دوباره عیب‌یابی کن تا ببینیم چه چیزی تغییر کرده.</p>
+          <div class="followup-icon">✓</div>
+          <div>
+            <span>مشکل پیدا شد</span>
+            <h2>همین نسخه را برای فنجان بعدی هم تکرار کن.</h2>
+            <p>اگر مشکل دوباره برگشت، عیب‌یاب را از اول اجرا کن تا ببینیم چه متغیری تغییر کرده.</p>
+          </div>
         </section>
       {:else}
         <section class="diagnosis-followup">
-          <span>STEP 03 · یک لایه عمیق‌تر</span>
-          <h2>{result.deeperAction}</h2>
-          <p>بعد از این تست اگر هنوز مشکل ماند، عیب‌یاب را دوباره با تنظیم جدید اجرا کن.</p>
+          <div class="followup-icon">03</div>
+          <div>
+            <span>یک لایه عمیق‌تر</span>
+            <h2>{result.deeperAction}</h2>
+            <p>بعد از این تست اگر هنوز مشکل ماند، عیب‌یاب را با تنظیم جدید دوباره اجرا کن.</p>
+          </div>
         </section>
       {/if}
 
@@ -303,46 +349,49 @@
   .fix-bottom{margin-top:26px;padding-top:18px;border-top:1px solid rgba(66,38,29,.08);display:flex;justify-content:space-between;align-items:center;gap:18px;color:#9b877f;font-size:.68rem}
   .fix-bottom button{border:0;background:transparent;color:#6d5147;font:inherit;font-weight:800;cursor:pointer}
 
-  .diagnosis-shell{padding-top:28px}
-  .diagnosis-hero{padding:34px 0 30px;border-bottom:1px solid rgba(66,38,29,.09);display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.65fr);gap:42px;align-items:end}
-  .diagnosis-copy{max-width:850px}.diagnosis-eyebrow{display:block;direction:ltr;text-align:right;color:rgba(66,38,29,.36);font-size:.6rem;letter-spacing:.18em;font-weight:800;margin-bottom:4px}
-  .diagnosis-copy h1{margin:4px 0 10px;font-size:clamp(2.35rem,4.4vw,4rem);line-height:1.35;letter-spacing:-.04em;font-weight:800;max-width:850px}
-  .diagnosis-copy>p{margin:0;max-width:720px;color:#846f66;font-size:.95rem;line-height:2}
-  .diagnosis-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px;border:1px solid rgba(66,38,29,.08);border-radius:18px;background:rgba(255,255,255,.48)}
-  .diagnosis-meta>div{min-width:0;padding:13px 12px;border-radius:13px;background:#fffaf4;display:grid;gap:4px}.diagnosis-meta small{font-size:.58rem;color:#9a8378}.diagnosis-meta strong{font-size:.76rem;line-height:1.7;color:#5d3d31;overflow:hidden;text-overflow:ellipsis}.diagnosis-meta .confidence{background:#f1e0cd}.diagnosis-meta .confidence strong{color:#ae6528;font-size:1.15rem}
+  .diagnosis-shell{padding-top:24px}
+  .diagnosis-hero{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:38px;align-items:center;padding:34px 0 32px;border-bottom:1px solid rgba(66,38,29,.09)}
+  .diagnosis-kicker-row{display:flex;align-items:center;gap:12px}.diagnosis-eyebrow{direction:ltr;color:rgba(66,38,29,.34);font-size:.56rem;letter-spacing:.16em;font-weight:800}.diagnosis-kicker-row .fix-kicker{margin:0}
+  .diagnosis-copy h1{margin:8px 0 10px;font-size:clamp(2.3rem,4vw,3.8rem);line-height:1.38;letter-spacing:-.038em;font-weight:800;max-width:820px}
+  .diagnosis-copy>p{margin:0;max-width:720px;color:#846f66;font-size:.94rem;line-height:2}
+  .diagnosis-summary-pills{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}.diagnosis-summary-pills span{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;background:#fffaf4;border:1px solid rgba(66,38,29,.08);font-size:.65rem;color:#73574d}.diagnosis-summary-pills b{font-weight:700;color:#ac6c37}.diagnosis-summary-pills .confidence{background:#f1dfcb}
+  .diagnosis-visual{justify-self:end;width:260px;padding:18px;border:1px solid rgba(66,38,29,.08);border-radius:24px;background:linear-gradient(145deg,#fffaf4,#eddcca);box-shadow:0 18px 42px rgba(66,38,29,.05)}
+  .diagnosis-photo-ring{width:150px;height:150px;margin:0 auto;border-radius:50%;overflow:hidden;border:8px solid rgba(255,255,255,.72);box-shadow:0 15px 35px rgba(66,38,29,.13)}.diagnosis-photo-ring img{width:100%;height:100%;object-fit:cover}
+  .diagnosis-visual-copy{text-align:center;margin-top:14px}.diagnosis-visual-copy span{display:block;direction:ltr;font-size:.49rem;letter-spacing:.15em;color:#9a7f71}.diagnosis-visual-copy strong{display:block;margin-top:5px;font-size:.78rem;line-height:1.7}
 
-  .diagnosis-plan{margin-top:22px;display:grid;grid-template-columns:1.45fr .8fr;gap:14px}
-  .plan-card{position:relative;border:1px solid rgba(66,38,29,.09);border-radius:24px;background:rgba(255,255,255,.7);padding:28px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:18px;box-shadow:0 14px 34px rgba(66,38,29,.035)}
-  .plan-card.primary{background:linear-gradient(135deg,#fffaf4 0%,#f1e0cd 100%);border-color:rgba(198,134,66,.18)}
-  .plan-card.secondary{background:rgba(255,255,255,.52)}
-  .plan-number{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#42261d;color:#fff;font-weight:800;font-size:.8rem;direction:ltr}
-  .secondary .plan-number{background:#ead9c8;color:#86552f}
-  .plan-copy{min-width:0}.diagnosis-label{font-size:.66rem;color:#b16c31;font-weight:800}.plan-copy h2{margin:8px 0 8px;font-size:clamp(1.55rem,2.5vw,2.45rem);line-height:1.65;font-weight:800}.plan-copy h3{margin:8px 0 8px;font-size:1.25rem;line-height:1.8;font-weight:800}.plan-copy p{margin:0;color:#806b62;font-size:.8rem;line-height:1.95}
-  .plan-badge{position:absolute;left:18px;top:18px;direction:ltr;font-size:.5rem;letter-spacing:.12em;color:rgba(66,38,29,.38);font-weight:800}
+  .prescription{margin-top:22px;padding:24px;border:1px solid rgba(66,38,29,.08);border-radius:26px;background:rgba(255,255,255,.48);box-shadow:0 14px 36px rgba(66,38,29,.025)}
+  .prescription-head{display:flex;justify-content:space-between;align-items:end;gap:20px;padding-bottom:16px;border-bottom:1px solid rgba(66,38,29,.07)}.prescription-head span{color:#ae6a32;font-size:.66rem;font-weight:800}.prescription-head h2{margin:4px 0 0;font-size:1.45rem;line-height:1.5}.prescription-head small{max-width:360px;color:#917e75;font-size:.62rem;line-height:1.8;text-align:left}
+  .prescription-flow{display:grid;grid-template-columns:minmax(0,1.15fr) 38px minmax(0,.85fr);gap:10px;align-items:stretch;margin-top:18px}
+  .prescription-step{position:relative;min-height:215px;padding:22px;border-radius:20px;background:#fffaf5;border:1px solid rgba(66,38,29,.08);display:flex;flex-direction:column}.prescription-step.primary{background:linear-gradient(135deg,#42261d 0%,#6c4434 100%);color:#fff;border-color:transparent;box-shadow:0 18px 38px rgba(66,38,29,.15)}
+  .step-topline{display:flex;align-items:center;justify-content:space-between;gap:12px}.step-no{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#ead8c5;color:#8b582d;font-size:.62rem;font-weight:800;direction:ltr}.primary .step-no{background:#f3d6b4;color:#6b3e24}.step-status{font-size:.58rem;color:#a3724d;font-weight:800}.primary .step-status{color:#e8b885}
+  .prescription-step h3{margin:20px 0 8px;font-size:1.32rem;line-height:1.85;font-weight:800}.prescription-step p{margin:0;color:#816e65;font-size:.72rem;line-height:1.95}.primary p{color:rgba(255,255,255,.68)}
+  .step-marker{margin-top:auto;padding-top:16px;display:flex;align-items:center;gap:7px;font-size:.54rem;color:#9a8479}.step-marker i{width:7px;height:7px;border-radius:50%;background:#c68442}.primary .step-marker{color:rgba(255,255,255,.56)}.primary .step-marker i{background:#f0bd83}
+  .prescription-arrow{display:grid;place-items:center;color:#c18049;font-size:1.2rem}
 
-  .diagnosis-insight-grid{margin-top:14px;display:grid;grid-template-columns:1.25fr .85fr .7fr;gap:12px}
-  .diagnosis-why,.diagnosis-guard-card,.diagnosis-rule-card{border:1px solid rgba(66,38,29,.08);border-radius:20px;background:rgba(255,255,255,.55);padding:20px}
-  .insight-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.insight-head>span,.diagnosis-guard-card span,.diagnosis-rule-card span{font-size:.64rem;color:#a26a3c;font-weight:800}.insight-head b{direction:ltr;color:rgba(66,38,29,.28);font-size:.52rem;letter-spacing:.16em}
-  .diagnosis-why>p{margin:10px 0 0;color:#725d54;line-height:2;font-size:.79rem}
-  .diagnosis-evidence{margin-top:15px;display:flex;flex-wrap:wrap;gap:7px}.diagnosis-evidence span{padding:7px 9px;border-radius:999px;background:#f1e6da;color:#6e554b;font-size:.6rem;line-height:1.5}
-  .diagnosis-guard-card{display:flex;align-items:flex-start;gap:12px;background:#fff8f2}.guard-icon{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:grid;place-items:center;background:#f1dac1;color:#a9662c;font-weight:900}.diagnosis-guard-card>div:last-child{display:grid;gap:7px}.diagnosis-guard-card strong{font-size:.78rem;line-height:1.95}
-  .diagnosis-rule-card{display:grid;align-content:start;gap:7px;background:#42261d;color:#fff}.diagnosis-rule-card span{color:#d8aa7c}.diagnosis-rule-card strong{font-size:1.02rem;line-height:1.8}.diagnosis-rule-card small{color:rgba(255,255,255,.62);font-size:.63rem;line-height:1.8}
+  .diagnosis-insight-grid{margin-top:14px;display:grid;grid-template-columns:1.25fr .85fr .72fr;gap:12px}
+  .diagnosis-why,.diagnosis-do-not,.diagnosis-rule-card{border:1px solid rgba(66,38,29,.08);border-radius:20px;background:rgba(255,255,255,.55);padding:20px}
+  .insight-head{display:flex;justify-content:space-between;gap:12px}.insight-head>div span,.diagnosis-do-not span,.diagnosis-rule-card span{font-size:.62rem;color:#a26a3c;font-weight:800}.insight-head h3{margin:4px 0 0;font-size:.9rem;line-height:1.7}.insight-head b{direction:ltr;color:rgba(66,38,29,.26);font-size:.5rem;letter-spacing:.16em}
+  .diagnosis-why>p{margin:12px 0 0;color:#725d54;line-height:2;font-size:.77rem}
+  .diagnosis-evidence{margin-top:14px;display:flex;flex-wrap:wrap;gap:7px}.diagnosis-evidence span{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border-radius:999px;background:#f1e6da;color:#6e554b;font-size:.59rem}.diagnosis-evidence i{font-style:normal;color:#9f6634;font-weight:800}
+  .diagnosis-do-not{display:flex;gap:12px;align-items:flex-start;background:#fff8f1}.do-not-icon{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:grid;place-items:center;background:#f0d8bd;color:#9b5d2c;font-weight:900}.diagnosis-do-not>div:last-child{display:grid;gap:7px}.diagnosis-do-not strong{font-size:.77rem;line-height:1.95}.diagnosis-do-not small{color:#9a857c;font-size:.6rem;line-height:1.8}
+  .diagnosis-rule-card{display:grid;align-content:start;gap:7px;background:#f0dfcd}.diagnosis-rule-card strong{font-size:1rem;line-height:1.8}.diagnosis-rule-card small{color:#8c756a;font-size:.62rem;line-height:1.8}
 
-  .diagnosis-feedback{margin-top:28px;padding:22px 24px;border:1px solid rgba(66,38,29,.09);border-radius:22px;background:rgba(255,255,255,.62);display:flex;justify-content:space-between;align-items:center;gap:24px}
-  .feedback-copy span,.diagnosis-followup>span{color:#a16e47;font-size:.62rem;font-weight:700}.feedback-copy h2,.diagnosis-followup h2{margin:4px 0 0;font-size:1.5rem;line-height:1.65}.feedback-copy p{margin:4px 0 0;color:#8a766d;font-size:.67rem}
-  .feedback-actions{display:flex;gap:8px}.diagnosis-feedback button{min-height:46px;padding:0 17px;border-radius:999px;font:inherit;font-size:.72rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:9px}.diagnosis-feedback button b{font-size:.85rem}.diagnosis-feedback .fixed{border:0;background:#42261d;color:#fff;box-shadow:0 10px 22px rgba(66,38,29,.13)}.diagnosis-feedback .not-fixed{border:1px solid rgba(66,38,29,.14);background:#fffaf5;color:#5e4237}
-  .diagnosis-followup{margin-top:28px;padding:22px 24px;border-radius:22px;background:#efe2d4;border:1px solid rgba(66,38,29,.06)}.diagnosis-followup.success{background:#e8efe7;color:#36543d}.diagnosis-followup p{margin:7px 0 0;color:#806c63;font-size:.76rem;line-height:1.9}
+  .diagnosis-feedback{margin-top:26px;padding:24px;border:1px solid rgba(66,38,29,.08);border-radius:24px;background:#fffaf4;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px}.feedback-copy span,.diagnosis-followup>div:last-child>span{color:#a16e47;font-size:.62rem;font-weight:700}.feedback-copy h2,.diagnosis-followup h2{margin:4px 0 0;font-size:1.6rem;line-height:1.6}.feedback-copy p{margin:4px 0 0;color:#8a766d;font-size:.67rem}
+  .feedback-actions{display:flex;gap:8px}.diagnosis-feedback button{min-height:48px;padding:0 17px;border-radius:999px;font:inherit;font-size:.72rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:12px}.diagnosis-feedback button b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center}.diagnosis-feedback .fixed{border:0;background:#42261d;color:#fff;box-shadow:0 10px 22px rgba(66,38,29,.13)}.diagnosis-feedback .fixed b{background:rgba(255,255,255,.12)}.diagnosis-feedback .not-fixed{border:1px solid rgba(66,38,29,.14);background:#fff;color:#5e4237}.diagnosis-feedback .not-fixed b{background:#f2e5d8;color:#9b6538}
+  .diagnosis-followup{margin-top:26px;padding:22px 24px;border-radius:22px;background:#efe2d4;border:1px solid rgba(66,38,29,.06);display:flex;gap:14px;align-items:flex-start}.diagnosis-followup.success{background:#e8efe7;color:#36543d}.followup-icon{width:42px;height:42px;flex:0 0 42px;border-radius:13px;display:grid;place-items:center;background:#42261d;color:#fff;font-size:.65rem;font-weight:800}.success .followup-icon{background:#5f7d64}.diagnosis-followup p{margin:7px 0 0;color:#806c63;font-size:.76rem;line-height:1.9}
   .diagnosis-actions{margin-top:16px;padding-top:16px;border-top:1px solid rgba(66,38,29,.08);display:flex;justify-content:space-between;align-items:center;gap:12px}.diagnosis-actions button,.diagnosis-actions a{min-height:42px;padding:0 15px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:.69rem;font-weight:800}.diagnosis-actions button{border:1px solid rgba(66,38,29,.14);background:transparent;color:#42261d;cursor:pointer}.diagnosis-actions a{background:#42261d;color:#fff}
 
   @media(max-width:980px){
     .fix-options{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .diagnosis-hero{grid-template-columns:1fr;gap:20px}
-    .diagnosis-meta{max-width:620px}
-    .diagnosis-plan{grid-template-columns:1fr}
+    .diagnosis-hero{grid-template-columns:1fr}.diagnosis-visual{justify-self:start}
+    .prescription-flow{grid-template-columns:1fr}.prescription-arrow{transform:rotate(-90deg);min-height:22px}
     .diagnosis-insight-grid{grid-template-columns:1fr 1fr}.diagnosis-why{grid-column:1/-1}
   }
   @media(max-width:640px){
     .fix-page{padding-top:18px}.fix-progress{margin-bottom:38px}.fix-intro h1{font-size:2.25rem}.fix-options{grid-template-columns:1fr}.fix-option{min-height:220px;display:grid;grid-template-columns:108px minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:16px;padding:16px}.fix-option-photo{grid-row:1/4;width:108px;height:108px;margin:0}.fix-option strong{align-self:end}.fix-option small{padding-bottom:20px}.fix-option i{left:16px;bottom:14px}
-    .diagnosis-hero{padding-top:20px}.diagnosis-copy h1{font-size:2.1rem}.diagnosis-meta{grid-template-columns:1fr}.diagnosis-plan{gap:10px}.plan-card{padding:18px;grid-template-columns:42px 1fr;gap:12px}.plan-number{width:40px;height:40px}.plan-badge{display:none}.plan-copy h2{font-size:1.35rem}.diagnosis-insight-grid{grid-template-columns:1fr}.diagnosis-why{grid-column:auto}.diagnosis-feedback,.diagnosis-actions{align-items:stretch;flex-direction:column}.feedback-actions{width:100%;flex-direction:column}.diagnosis-feedback button{width:100%;justify-content:center}.diagnosis-actions button,.diagnosis-actions a{justify-content:center}
+    .diagnosis-copy h1{font-size:2rem}.diagnosis-visual{width:100%;display:flex;align-items:center;gap:14px}.diagnosis-photo-ring{width:92px;height:92px;margin:0}.diagnosis-visual-copy{text-align:right;margin:0}
+    .prescription{padding:16px}.prescription-head{align-items:flex-start;flex-direction:column}.prescription-head small{text-align:right}.prescription-step{min-height:190px;padding:18px}
+    .diagnosis-insight-grid{grid-template-columns:1fr}.diagnosis-why{grid-column:auto}
+    .diagnosis-feedback{grid-template-columns:1fr}.feedback-actions{width:100%;flex-direction:column}.diagnosis-feedback button{width:100%;justify-content:space-between}.diagnosis-actions{align-items:stretch;flex-direction:column}.diagnosis-actions button,.diagnosis-actions a{justify-content:center}
   }
 </style>
