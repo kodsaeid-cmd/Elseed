@@ -27,6 +27,15 @@
       detail: 'User Journey'
     },
     {
+      href: '/admin/stories',
+      kicker: 'STORYTELLING',
+      title: 'Story Library',
+      description: 'داستان‌های تاریخی، فرهنگی و پندآموز برای «داستان امروز» در قهوه و من.',
+      stat: data.counts.stories + ' منتشرشده',
+      detail: 'Daily Stories'
+    },
+
+    {
       href: '/admin/newsletter',
       kicker: 'AUDIENCE',
       title: 'خبرنامه',
