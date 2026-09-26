@@ -76,7 +76,13 @@ function rowToArticle(row: CmsArticleRow): MagazineArticle {
     quickAnswer: content.quickAnswer,
     sections: Array.isArray(content.sections) ? content.sections : [],
     takeaway: row.takeaway,
-    cta
+    cta,
+    seo: {
+      metaTitle: row.meta_title,
+      metaDescription: row.meta_description,
+      canonicalUrl: row.canonical_url,
+      robots: row.robots
+    }
   };
 }
 
