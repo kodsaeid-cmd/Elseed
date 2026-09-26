@@ -21,6 +21,9 @@ export type MagazineArticle = {
   quickAnswer?: string;
   sections: MagazineSection[];
   takeaway: string;
+  faq?: { question: string; answer: string }[];
+  relatedSlugs?: string[];
+  internalLinks?: { label: string; href: string }[];
   cta?: {
     label: string;
     href: string;
