@@ -12,7 +12,9 @@ export type MagazineArticle = {
   excerpt: string;
   meta: string;
   publishedAt: string;
+  publishedIso: string;
   updatedAt?: string;
+  updatedIso?: string;
   image: string;
   imageAlt: string;
   featured?: boolean;
@@ -44,6 +46,7 @@ export const magazineArticles: MagazineArticle[] = [
     excerpt: 'یک راهنمای ساده برای اینکه بفهمی چرا قهوه‌ی عصر برای بعضی‌ها عالی است و برای بعضی‌ها خواب شب را به‌هم می‌ریزد.',
     meta: '۷ دقیقه مطالعه',
     publishedAt: '۱۴۰۵/۰۷/۰۴',
+    publishedIso: '2026-09-26',
     image: '/media/sensitivity-sleep-human-v2',
     imageAlt: 'فردی که شب در تخت خواب بیدار مانده است',
     featured: true,
@@ -89,6 +92,7 @@ export const magazineArticles: MagazineArticle[] = [
     excerpt: 'قبل از اینکه دانه را مقصر بدانی، سه چیز ساده را چک کن: آسیاب، زمان عصاره‌گیری و نسبت قهوه به آب.',
     meta: '۵ دقیقه مطالعه',
     publishedAt: '۱۴۰۵/۰۷/۰۳',
+    publishedIso: '2026-09-25',
     image: '/media/espresso',
     imageAlt: 'فنجان اسپرسو روی میز',
     quickAnswer: 'ترشی تیز و نارس معمولاً نشانه‌ی این است که عصاره‌گیری کافی نبوده؛ یعنی آب نتوانسته بخش کافی از طعم‌های دانه را بیرون بکشد.',
@@ -132,6 +136,7 @@ export const magazineArticles: MagazineArticle[] = [
     excerpt: 'یک نسخه‌ی بی‌دردسر برای فنجانی تمیز و قابل تکرار؛ بدون اینکه دم‌آوری را به مسئله‌ی پیچیده تبدیل کنیم.',
     meta: '۶ دقیقه مطالعه',
     publishedAt: '۱۴۰۵/۰۷/۰۲',
+    publishedIso: '2026-09-24',
     image: '/media/brew-v60-human-v2',
     imageAlt: 'دم‌آوری قهوه با V60',
     sections: [
@@ -175,6 +180,7 @@ export const magazineArticles: MagazineArticle[] = [
     excerpt: 'اگر فنجانت زیادی سریع، کند، ترش یا خشک می‌شود، آسیاب یکی از اولین جاهایی است که باید نگاه کنی.',
     meta: '۵ دقیقه مطالعه',
     publishedAt: '۱۴۰۵/۰۷/۰۱',
+    publishedIso: '2026-09-23',
     image: '/media/brew-filter-human-v2',
     imageAlt: 'آماده‌سازی قهوه در خانه',
     sections: [
@@ -211,6 +217,7 @@ export const magazineArticles: MagazineArticle[] = [
     excerpt: 'به‌جای مسابقه‌ی «کدام بهتر است؟»، ببین دنبال چه طعم، انرژی و نوع فنجانی هستی.',
     meta: '۶ دقیقه مطالعه',
     publishedAt: '۱۴۰۵/۰۶/۳۰',
+    publishedIso: '2026-09-22',
     image: '/media/find',
     imageAlt: 'قهوه در فضای روزمره',
     sections: [
@@ -242,6 +249,7 @@ export const magazineArticles: MagazineArticle[] = [
     excerpt: 'صبح شاید دنبال شروع جدی روز باشی؛ عصر ممکن است بیشتر دنبال مزه، معاشرت یا یک فنجان سبک‌تر باشی.',
     meta: '۴ دقیقه مطالعه',
     publishedAt: '۱۴۰۵/۰۶/۲۹',
+    publishedIso: '2026-09-21',
     image: '/media/time-afternoon-v4',
     imageAlt: 'جمع دوستانه در حال نوشیدن قهوه',
     sections: [
