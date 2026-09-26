@@ -31,7 +31,7 @@
     <div class="admin-alert admin-alert-error">{form.error}</div>
   {/if}
 
-  <AdminArticleForm initial={data.article} submitLabel="ذخیره تغییرات" />
+  <AdminArticleForm initial={data.article} articleOptions={data.articleOptions} submitLabel="ذخیره تغییرات" />
 
   <section class="admin-danger-zone">
     <div>
