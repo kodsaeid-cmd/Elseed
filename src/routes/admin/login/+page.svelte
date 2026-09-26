@@ -21,8 +21,9 @@
     </div>
 
     {#if !data.configured}
-      <div class="admin-alert">
-        برای فعال شدن ورود، Secret با نام <code>ADMIN_PASSWORD</code> باید در محیط Cloudflare تنظیم شود.
+      <div class="admin-alert admin-alert-error">
+        Secret <code>ADMIN_PASSWORD</code> در Runtime فعلی Production دیده نمی‌شود. اگر همین الان آن را ساخته‌ای،
+        این Deploy باید دوباره اجرا شود؛ اگر بعد از Deploy همچنان این پیام ماند، Secret در Environment یا Project دیگری ثبت شده است.
       </div>
     {/if}
 
@@ -35,7 +36,7 @@
         <span>رمز ادمین</span>
         <input name="password" type="password" autocomplete="current-password" required />
       </label>
-      <button type="submit" disabled={!data.configured}>ورود به پنل</button>
+      <button type="submit">ورود به پنل</button>
     </form>
 
     <a class="admin-backsite" href="/">← بازگشت به سایت</a>
