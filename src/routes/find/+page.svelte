@@ -38,7 +38,7 @@
       subtitle: 'نه اصطلاح تخصصی؛ فقط نقشی که می‌خوای فنجانت برات بازی کنه.',
       options: [
         { value: 'strong', title: 'منو راه بندازه', description: 'یه شروع قوی و انرژی واضح می‌خوام', icon: '⚡', image: '/media/effect-strong-human-v2' },
-        { value: 'balanced', title: 'کمکم کنه تمرکز کنم', description: 'انرژی متعادل برای کار و تمرکز', icon: '↗', image: '/media/find/effect-balanced-human-v3.webp' },
+        { value: 'balanced', title: 'کمکم کنه تمرکز کنم', description: 'انرژی متعادل برای کار و تمرکز', icon: '↗', image: '/media/find/effect-balanced-human-v3.png' },
         { value: 'many', title: 'بتونم چند فنجان بخورم', description: 'می‌خوام جا برای فنجان بعدی هم باشه', icon: '∞', image: '/media/effect-many-human-v2' },
         { value: 'taste', title: 'فقط خود قهوه رو می‌خوام', description: 'بیشتر برای مزه و حس خوبش', icon: '♡', image: '/media/effect-taste-human-v2' }
       ]
@@ -49,10 +49,10 @@
       title: 'کافئین باهات چطوره؟',
       subtitle: 'این جواب فقط برای انتخاب شدت مناسب استفاده می‌شود.',
       options: [
-        { value: 'none', title: 'هیچ مشکلی ندارم', description: 'قهوه معمولاً اذیتم نمی‌کنه', icon: '●', image: '/media/find/sensitivity-none-human-v3.webp' },
-        { value: 'some', title: 'گاهی زیادی می‌شه', description: 'بعضی قهوه‌ها برام سنگین‌اند', icon: '◒', image: '/media/find/sensitivity-some-human-v3.webp' },
-        { value: 'high', title: 'بهش حساسم', description: 'ترجیح می‌دم ملایم‌تر باشه', icon: '○', image: '/media/find/sensitivity-high-human-v3.webp' },
-        { value: 'sleep', title: 'روی خوابم اثر می‌ذاره', description: 'خصوصاً اگر دیرتر بخورم', icon: '☾', image: '/media/find/sensitivity-sleep-human-v3.webp' }
+        { value: 'none', title: 'هیچ مشکلی ندارم', description: 'قهوه معمولاً اذیتم نمی‌کنه', icon: '●', image: '/media/find/sensitivity-none-human-v3.png' },
+        { value: 'some', title: 'گاهی زیادی می‌شه', description: 'بعضی قهوه‌ها برام سنگین‌اند', icon: '◒', image: '/media/find/sensitivity-some-human-v3.png' },
+        { value: 'high', title: 'بهش حساسم', description: 'ترجیح می‌دم ملایم‌تر باشه', icon: '○', image: '/media/find/sensitivity-high-human-v3.png' },
+        { value: 'sleep', title: 'روی خوابم اثر می‌ذاره', description: 'خصوصاً اگر دیرتر بخورم', icon: '☾', image: '/media/find/sensitivity-sleep-human-v3.png' }
       ]
     },
     {
@@ -79,7 +79,7 @@
         { value: 'v60', title: 'V60 / پوراور', description: 'تمیز و شفاف', icon: '▽', image: '/media/brew-v60-human-v2' },
         { value: 'french', title: 'فرنچ‌پرس', description: 'پرتر و راحت', icon: '▤', image: '/media/brew-french-human-v2' },
         { value: 'filter', title: 'قهوه‌ساز فیلتری', description: 'برای فنجان‌های روزانه', icon: '⌁', image: '/media/brew-filter-human-v2' },
-        { value: 'unsure', title: 'هنوز نمی‌دونم', description: 'نسخه عمومی بده', icon: '?', image: '/media/find/brew-unsure-human-v3.webp' }
+        { value: 'unsure', title: 'هنوز نمی‌دونم', description: 'نسخه عمومی بده', icon: '?', image: '/media/find/brew-unsure-human-v3.png' }
       ]
     }
   ];
