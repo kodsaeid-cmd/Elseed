@@ -1,6 +1,6 @@
 <script lang="ts">
   import AdminArticleForm from '$lib/AdminArticleForm.svelte';
-  let { form } = $props();
+  let { data, form } = $props();
 
   const initial = {
     title: '',
@@ -44,5 +44,5 @@
     <div class="admin-alert admin-alert-error">{form.error}</div>
   {/if}
 
-  <AdminArticleForm {initial} submitLabel="ساخت مقاله" />
+  <AdminArticleForm {initial} articleOptions={data.articleOptions} submitLabel="ساخت مقاله" />
 </div>
