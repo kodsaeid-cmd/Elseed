@@ -1,5 +1,6 @@
 import type { RequestHandler } from './$types';
 import { getPublishedArticles } from '$lib/server/cms';
+import { shopProducts } from '$lib/shopCatalog';
 
 const origin = 'https://elseed.ir';
 
@@ -10,6 +11,7 @@ export const GET: RequestHandler = async ({ platform }) => {
     { path: '/find', changefreq: 'monthly', priority: '0.9' },
     { path: '/fix', changefreq: 'monthly', priority: '0.9' },
     { path: '/coffee-and-me', changefreq: 'monthly', priority: '0.8' },
+    { path: '/shop', changefreq: 'weekly', priority: '0.9' },
     { path: '/magazine', changefreq: 'daily', priority: '0.9' }
   ];
 
@@ -20,6 +22,9 @@ export const GET: RequestHandler = async ({ platform }) => {
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`
+    ),
+    ...shopProducts.map(
+      (product) => `  <url>\n    <loc>${origin}/shop/${product.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
     ),
     ...magazineArticles.map(
       (article) => `  <url>
