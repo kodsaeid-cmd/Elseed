@@ -56,7 +56,7 @@
 <main class="shop-page">
   <section class="shop-hero shell">
     <div class="hero-photo">
-      <img src="/media/find/time-morning-human-v4.webp" alt="شروع صبح با یک فنجان قهوه" />
+      <img src="/media/hero" alt="یک لحظه واقعی از قهوه در زندگی روزمره" />
       <div class="hero-photo-copy">
         <span>EL.SEED MOOD SHOP</span>
         <strong>GOOD COFFEE.<br />BETTER DAYS.</strong>
